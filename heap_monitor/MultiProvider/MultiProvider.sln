@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultiProvider", "MultiProvider.vcxproj", "{E2E96391-A0DC-48F3-8125-28740213A8E0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F85951E8-82DC-485F-A2FD-4C33836DA181} = {F85951E8-82DC-485F-A2FD-4C33836DA181}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultiProviderRes", "MultiProviderRes.vcxproj", "{F85951E8-82DC-485F-A2FD-4C33836DA181}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2E96391-A0DC-48F3-8125-28740213A8E0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E2E96391-A0DC-48F3-8125-28740213A8E0}.Debug|Win32.Build.0 = Debug|Win32
+		{E2E96391-A0DC-48F3-8125-28740213A8E0}.Release|Win32.ActiveCfg = Release|Win32
+		{E2E96391-A0DC-48F3-8125-28740213A8E0}.Release|Win32.Build.0 = Release|Win32
+		{F85951E8-82DC-485F-A2FD-4C33836DA181}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F85951E8-82DC-485F-A2FD-4C33836DA181}.Debug|Win32.Build.0 = Debug|Win32
+		{F85951E8-82DC-485F-A2FD-4C33836DA181}.Release|Win32.ActiveCfg = Release|Win32
+		{F85951E8-82DC-485F-A2FD-4C33836DA181}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

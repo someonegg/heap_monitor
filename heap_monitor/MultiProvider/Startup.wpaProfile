@@ -1,0 +1,549 @@
+﻿<WpaProfile xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" SavedWith="6.2.9200.16384 (win8_rtm.120725-1247)" AppendNtSymbolPath="" AppendNtSymCachePath="" xmlns="clr-namespace:Microsoft.Performance.Shell;assembly=Microsoft.Performance.Shell">
+  <WpaProfile.DocumentGroupContainer>
+    <DocumentGroupContainer IsVisible="True" DockedHeight="*" DockedWidth="*" xmlns="clr-namespace:Microsoft.VisualStudio.PlatformUI.Shell;assembly=Microsoft.Performance.Shell">
+      <DocumentGroup IsVisible="True">
+        <AnalysisView Name="73cf95f4-3ba7-42ae-9263-fbc38daf9359" IsSelected="True" IsVisible="True" xmlns="clr-namespace:Microsoft.Performance.Shell.Graphing;assembly=Microsoft.Performance.Shell">
+          <AnalysisView.Title>
+            <ViewTitle Title="Analysis" xmlns="clr-namespace:Microsoft.Performance.Shell;assembly=Microsoft.Performance.Shell" />
+          </AnalysisView.Title>
+          <GenericEventsGraphTreeItem GraphHeight="58" xmlns="clr-namespace:Microsoft.Performance.Shell.Tables;assembly=Microsoft.Performance.Shell">
+            <GenericEventsGraphTreeItem.HdvViewModelPreset>
+              <HdvViewModelPreset Name="MultiProvider Events" GraphColumnCount="48" KeyColumnCount="4" LeftFrozenColumnCount="5" RightFrozenColumnCount="46" InitialFilterQuery="[Provider Name]:~=&quot;Multi-&quot;" InitialSelectionQuery="" InitialExpansionQuery="" xmlns="clr-namespace:Microsoft.Performance.UI.DataEngine.ViewModelPresets;assembly=Microsoft.Performance.UI.DataEngine">
+                <HdvViewModelPreset.ColumnMetadataEntries>
+                  <ColumnMetadataEntry Name="Time (s)" ColumnMetadata="StartTime" />
+                  <ColumnMetadataEntry Name="Time (s)" ColumnMetadata="EndTime" />
+                  <ColumnMetadataEntry Name="ThreadId" ColumnMetadata="EndThreadId" />
+                </HdvViewModelPreset.ColumnMetadataEntries>
+                <HdvViewModelPreset.ConfigurableColumns>
+                  <HdvColumnViewModelPreset Name="Process" IsVisible="True" SortPriority="9" Width="150" />
+                  <HdvColumnViewModelPreset Name="Provider Name" IsVisible="True" SortPriority="1" Width="200" />
+                  <HdvColumnViewModelPreset Name="Task Name" SortPriority="2" Width="80" />
+                  <HdvColumnViewModelPreset Name="Opcode Name" IsVisible="True" SortPriority="3" Width="80" />
+                  <HdvColumnViewModelPreset Name="Event Name" IsVisible="True" SortPriority="4" Width="100" />
+                  <HdvColumnViewModelPreset Name="Provider Id" SortPriority="5" Width="100" />
+                  <HdvColumnViewModelPreset Name="Provider Type" SortPriority="6" Width="100" />
+                  <HdvColumnViewModelPreset Name="Cpu" IsVisible="True" SortPriority="7" Width="30" />
+                  <HdvColumnViewModelPreset Name="ThreadId" IsVisible="True" SortPriority="8" Width="50" />
+                  <HdvColumnViewModelPreset Name="Process Name" IsVisible="True" SortPriority="10" Width="150" />
+                  <HdvColumnViewModelPreset Name="Opcode/Type " SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Level" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Version" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Task" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Keyword" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Channel" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Id" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="UserDataLength" AggregationMode="Sum" SortPriority="-1" Width="30" />
+                  <HdvColumnViewModelPreset Name="etw:ActivityId" SortPriority="-1" Width="60" />
+                  <HdvColumnViewModelPreset Name="etw:Related ActivityId" SortPriority="-1" Width="60" />
+                  <HdvColumnViewModelPreset Name="etw:UserSid" SortPriority="-1" Width="60" />
+                  <HdvColumnViewModelPreset Name="etw:SessionId" SortPriority="-1" Width="60" />
+                  <HdvColumnViewModelPreset Name="Stack" SortPriority="-1" Width="100" />
+                  <HdvColumnViewModelPreset Name="Thread Start Module" SortPriority="-1" Width="100" />
+                  <HdvColumnViewModelPreset Name="Thread Start Function" SortPriority="-1" Width="100" />
+                  <HdvColumnViewModelPreset Name="Field 1" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 2" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 3" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 4" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 5" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 6" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 7" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 8" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 9" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 10" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 11" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 12" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 13" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 14" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 15" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 16" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 17" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 18" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Field 19" IsVisible="True" SortPriority="-1" Width="80" />
+                  <HdvColumnViewModelPreset Name="Count" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" Width="80" />
+                  <HdvColumnViewModelPreset Name="Time (s)" IsVisible="True" SortPriority="11" Width="80" />
+                </HdvViewModelPreset.ConfigurableColumns>
+              </HdvViewModelPreset>
+            </GenericEventsGraphTreeItem.HdvViewModelPreset>
+          </GenericEventsGraphTreeItem>
+          <Core4SummaryTableFillerGraphTreeItem GraphHeight="21" ClsID="3c18eb9c-2211-4988-bf94-bb029e4ce96e" xmlns="clr-namespace:Microsoft.Performance.Shell.Tables;assembly=Microsoft.Performance.Shell">
+            <Core4SummaryTableFillerGraphTreeItem.HdvViewModelPreset>
+              <HdvViewModelPreset Name="Focus by Process, Thread" GraphColumnCount="9" KeyColumnCount="3" LeftFrozenColumnCount="2" RightFrozenColumnCount="8" InitialFilterQuery="" InitialSelectionQuery="" xmlns="clr-namespace:Microsoft.Performance.UI.DataEngine.ViewModelPresets;assembly=Microsoft.Performance.UI.DataEngine">
+                <HdvViewModelPreset.ColumnMetadataEntries>
+                  <ColumnMetadataEntry Name="Start Time (s)" ColumnMetadata="StartTime" />
+                  <ColumnMetadataEntry Name="End Time (s)" ColumnMetadata="EndTime" />
+                </HdvViewModelPreset.ColumnMetadataEntries>
+                <HdvViewModelPreset.ConfigurableColumns>
+                  <HdvColumnViewModelPreset Name="Process Name" IsVisible="True" SortPriority="3" Width="185" />
+                  <HdvColumnViewModelPreset Name="Thread Id" IsVisible="True" SortPriority="5" TextAlignment="Right" Width="80" />
+                  <HdvColumnViewModelPreset Name="Count" AggregationMode="Count" IsVisible="True" SortPriority="2" TextAlignment="Right" Width="60" />
+                  <HdvColumnViewModelPreset Name="Process Id" IsVisible="True" SortPriority="4" TextAlignment="Right" Width="80" />
+                  <HdvColumnViewModelPreset Name="Duration (s)" AggregationMode="Sum" IsVisible="True" SortPriority="6" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="Table" Width="80" />
+                  <HdvColumnViewModelPreset Name="Start Time (s)" AggregationMode="Min" IsVisible="True" SortOrder="Ascending" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="End Time (s)" AggregationMode="Max" IsVisible="True" SortPriority="1" TextAlignment="Right" Width="120" />
+                </HdvViewModelPreset.ConfigurableColumns>
+              </HdvViewModelPreset>
+            </Core4SummaryTableFillerGraphTreeItem.HdvViewModelPreset>
+          </Core4SummaryTableFillerGraphTreeItem>
+          <CpuSchedulingWithReadyThreadGraphTreeItem GraphHeight="92" Color="#FFFF0000" xmlns="clr-namespace:Microsoft.Performance.Shell.Tables;assembly=Microsoft.Performance.Shell">
+            <CpuSchedulingWithReadyThreadGraphTreeItem.HdvViewModelPreset>
+              <HdvViewModelPreset Name="Wait analysis - with ready thread" GraphColumnCount="53" KeyColumnCount="9" RightFrozenColumnCount="55" InitialFilterQuery="" InitialSelectionQuery="([Series Name]:=&quot;NewProcess&quot; AND NOT ([NewProcess]:=&quot;Idle (0)&quot;))" GraphFilterColumnName="TimeSinceLast (us)" xmlns="clr-namespace:Microsoft.Performance.UI.DataEngine.ViewModelPresets;assembly=Microsoft.Performance.UI.DataEngine">
+                <HdvViewModelPreset.ColumnMetadataEntries>
+                  <ColumnMetadataEntry Name="NewThreadId" ColumnMetadata="EndThreadId" />
+                  <ColumnMetadataEntry Name="SwitchInTime (s)" ColumnMetadata="StartTime" />
+                  <ColumnMetadataEntry Name="NewInSwitchTime (us)" ColumnMetadata="Duration" />
+                  <ColumnMetadataEntry Name="Cpu" ColumnMetadata="ResourceId" />
+                  <ColumnMetadataEntry Name="TimeSinceLast (us)" ColumnMetadata="WaitDuration" />
+                  <ColumnMetadataEntry Name="SwitchInTime (s)" ColumnMetadata="WaitEndTime" />
+                </HdvViewModelPreset.ColumnMetadataEntries>
+                <HdvViewModelPreset.ConfigurableColumns>
+                  <HdvColumnViewModelPreset Name="NewProcess Name" SortPriority="1" Width="180" />
+                  <HdvColumnViewModelPreset Name="NewProcess" IsVisible="True" SortPriority="2" Width="133" />
+                  <HdvColumnViewModelPreset Name="NewThreadId" IsVisible="True" SortPriority="3" TextAlignment="Right" Width="80" />
+                  <HdvColumnViewModelPreset Name="NewThreadStack" IsVisible="True" SortPriority="4" Width="299" />
+                  <HdvColumnViewModelPreset Name="ReadyingProcess Name" SortPriority="5" Width="180" />
+                  <HdvColumnViewModelPreset Name="ReadyingProcess" IsVisible="True" SortPriority="6" Width="115" />
+                  <HdvColumnViewModelPreset Name="ReadyingThreadId" IsVisible="True" SortPriority="7" TextAlignment="Right" Width="66" />
+                  <HdvColumnViewModelPreset Name="ReadyThreadStack" IsVisible="True" SortPriority="8" Width="146" />
+                  <HdvColumnViewModelPreset Name="ReadyTime (s)" SortPriority="9" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="Count" AggregationMode="Count" IsVisible="True" SortPriority="10" TextAlignment="Right" Width="50" />
+                  <HdvColumnViewModelPreset Name="TimeSinceLast (us)" AggregationMode="Sum" IsVisible="True" SortPriority="11" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="TimeSinceLast (us)" AggregationMode="Max" IsVisible="True" SortPriority="12" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="Ready (us)" AggregationMode="Sum" IsVisible="True" SortPriority="13" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="Ready (us)" AggregationMode="Max" SortPriority="14" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="Waits (us)" AggregationMode="Sum" IsVisible="True" SortPriority="15" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="Waits (us)" AggregationMode="Max" SortPriority="16" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="Count:Waits" AggregationMode="Sum" SortPriority="17" TextAlignment="Right" Width="70" />
+                  <HdvColumnViewModelPreset Name="SwitchInTime (s)" SortPriority="18" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="LastSwitchOutTime (s)" SortPriority="19" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="NextSwitchOutTime (s)" SortPriority="20" TextAlignment="Right" Width="120" />
+                  <HdvColumnViewModelPreset Name="NewPrevOutPri" SortPriority="21" TextAlignment="Right" Width="70" />
+                  <HdvColumnViewModelPreset Name="NewInPri" SortPriority="22" TextAlignment="Right" Width="70" />
+                  <HdvColumnViewModelPreset Name="NewOutPri" SortPriority="23" TextAlignment="Right" Width="70" />
+                  <HdvColumnViewModelPreset Name="NewQnt" SortPriority="24" TextAlignment="Right" Width="60" />
+                  <HdvColumnViewModelPreset Name="NewPrevState" SortPriority="25" Width="100" />
+                  <HdvColumnViewModelPreset Name="NewPrevWaitReason" SortPriority="26" Width="100" />
+                  <HdvColumnViewModelPreset Name="NewPrevWaitMode" SortPriority="27" Width="80" />
+                  <HdvColumnViewModelPreset Name="NewState" SortPriority="28" Width="100" />
+                  <HdvColumnViewModelPreset Name="NewWaitReason" SortPriority="29" Width="100" />
+                  <HdvColumnViewModelPreset Name="NewWaitMode" SortPriority="30" Width="80" />
+                  <HdvColumnViewModelPreset Name="NewPriDecr" SortPriority="31" TextAlignment="Right" Width="60" />
+                  <HdvColumnViewModelPreset Name="OldProcess Name" SortPriority="32" Width="180" />
+                  <HdvColumnViewModelPreset Name="OldProcess" SortPriority="33" Width="200" />
+                  <HdvColumnViewModelPreset Name="OldThreadId" SortPriority="34" TextAlignment="Right" Width="80" />
+                  <HdvColumnViewModelPreset Name="OldOutPri" SortPriority="35" TextAlignment="Right" Width="70" />
+                  <HdvColumnViewModelPreset Name="OldQnt" SortPriority="36" TextAlignment="Right" Width="60" />
+                  <HdvColumnViewModelPreset Name="OldInSwitchTime (us)" AggregationMode="Sum" SortPriority="37" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="OldState" SortPriority="38" Width="80" />
+                  <HdvColumnViewModelPreset Name="OldWaitReason" SortPriority="39" Width="100" />
+                  <HdvColumnViewModelPreset Name="OldWaitMode" SortPriority="40" Width="80" />
+                  <HdvColumnViewModelPreset Name="Cpu" SortPriority="41" TextAlignment="Right" Width="50" />
+                  <HdvColumnViewModelPreset Name="IdealCpu" SortPriority="42" TextAlignment="Right" Width="60" />
+                  <HdvColumnViewModelPreset Name="PrevCState" SortPriority="43" TextAlignment="Right" Width="60" />
+                  <HdvColumnViewModelPreset Name="NewThreadStartModule" SortPriority="44" Width="200" />
+                  <HdvColumnViewModelPreset Name="NewThreadStartFunction" SortPriority="45" Width="200" />
+                  <HdvColumnViewModelPreset Name="ReadyingThreadStartModule" SortPriority="46" Width="200" />
+                  <HdvColumnViewModelPreset Name="ReadyingThreadStartFunction" SortPriority="47" Width="200" />
+                  <HdvColumnViewModelPreset Name="OldThreadStartModule" SortPriority="48" Width="200" />
+                  <HdvColumnViewModelPreset Name="OldThreadStartFunction" SortPriority="49" Width="200" />
+                  <HdvColumnViewModelPreset Name="NewInSwitchTime (us)" AggregationMode="Sum" SortPriority="50" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="CPU Usage (ms)" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="% CPU Usage" AggregationMode="Sum" IsVisible="True" SortPriority="51" TextAlignment="Right" Width="82" />
+                </HdvViewModelPreset.ConfigurableColumns>
+              </HdvViewModelPreset>
+            </CpuSchedulingWithReadyThreadGraphTreeItem.HdvViewModelPreset>
+          </CpuSchedulingWithReadyThreadGraphTreeItem>
+          <CpuSamplingGraphTreeItem DataTableHeight="304" LayoutStyleFree="DataTable" Color="#FFFF0000" xmlns="clr-namespace:Microsoft.Performance.Shell.Tables;assembly=Microsoft.Performance.Shell">
+            <CpuSamplingGraphTreeItem.HdvViewModelPreset>
+              <HdvViewModelPreset Name="Stack based - inclusive" GraphColumnCount="19" KeyColumnCount="9" RightFrozenColumnCount="21" InitialFilterQuery="[DPC/ISR]:=&quot;DPC&quot; OR [DPC/ISR]:=&quot;ISR&quot; OR [Process Name]:=Idle" InitialFilterShouldKeep="False" InitialSelectionQuery="([Series Name]:=&quot;Process&quot; AND NOT ([Process]:=&quot;Idle (0)&quot;))" InitialExpansionQuery="" GraphFilterColumnName="Count" xmlns="clr-namespace:Microsoft.Performance.UI.DataEngine.ViewModelPresets;assembly=Microsoft.Performance.UI.DataEngine">
+                <HdvViewModelPreset.ColumnMetadataEntries>
+                  <ColumnMetadataEntry Name="Thread ID" ColumnMetadata="EndThreadId" />
+                  <ColumnMetadataEntry Name="TimeStamp" ColumnMetadata="EndTime" />
+                  <ColumnMetadataEntry Name="Weight" ColumnMetadata="Duration" />
+                  <ColumnMetadataEntry Name="CPU" ColumnMetadata="ResourceId" />
+                </HdvViewModelPreset.ColumnMetadataEntries>
+                <HdvViewModelPreset.ConfigurableColumns>
+                  <HdvColumnViewModelPreset Name="Process Name" SortPriority="1" Width="180" />
+                  <HdvColumnViewModelPreset Name="Display Name" SortPriority="2" Width="200" />
+                  <HdvColumnViewModelPreset Name="Process" IsVisible="True" SortPriority="3" Width="200" />
+                  <HdvColumnViewModelPreset Name="Thread ID" IsVisible="True" SortPriority="9" TextAlignment="Right" Width="80" />
+                  <HdvColumnViewModelPreset Name="Stack" IsVisible="True" SortPriority="4" Width="623" />
+                  <HdvColumnViewModelPreset Name="Module" SortPriority="5" Width="124" />
+                  <HdvColumnViewModelPreset Name="Function" SortPriority="6" Width="184" />
+                  <HdvColumnViewModelPreset Name="Address" SortPriority="8" TextAlignment="Right" Width="140" />
+                  <HdvColumnViewModelPreset Name="Count" AggregationMode="Sum" IsVisible="True" SortPriority="11" TextAlignment="Right" Width="60" />
+                  <HdvColumnViewModelPreset Name="Weight" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="TimeStamp" SortPriority="13" TextAlignment="Right" Width="100" />
+                  <HdvColumnViewModelPreset Name="CPU" SortPriority="10" TextAlignment="Right" Width="40" />
+                  <HdvColumnViewModelPreset Name="Priority" SortPriority="14" TextAlignment="Right" Width="80" />
+                  <HdvColumnViewModelPreset Name="Thread Start Module" SortPriority="15" Width="140" />
+                  <HdvColumnViewModelPreset Name="Thread Start Function" SortPriority="16" Width="160" />
+                  <HdvColumnViewModelPreset Name="DPC/ISR" SortPriority="7" Width="184" />
+                  <HdvColumnViewModelPreset Name="All Count" AggregationMode="Count" SortPriority="17" Width="80" />
+                  <HdvColumnViewModelPreset Name="% Weight" AggregationMode="Sum" IsVisible="True" SortPriority="18" TextAlignment="Right" Width="80" />
+                </HdvViewModelPreset.ConfigurableColumns>
+              </HdvViewModelPreset>
+            </CpuSamplingGraphTreeItem.HdvViewModelPreset>
+          </CpuSamplingGraphTreeItem>
+        </AnalysisView>
+      </DocumentGroup>
+    </DocumentGroupContainer>
+  </WpaProfile.DocumentGroupContainer>
+  <WpaProfile.FloatSites />
+  <WpaProfile.HdvPresetCollections>
+    <HdvPresetCollections xmlns="clr-namespace:Microsoft.Performance.UI.DataEngine.ViewModelPresets;assembly=Microsoft.Performance.UI.DataEngine">
+      <HdvPresetCollections.PresetCollections>
+        <HdvViewModelPresetCollection Name="84255312-bf75-49e3-ab62-fa6acc6a10da">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="e24fd7fc-3c84-4d81-93b7-b690e4a24d11">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="31119377-4dc0-4c74-808d-3f45d34b6008">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="b186f02d-8d06-4bbb-9ad1-abf7985fb61a">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="04109c2c-d66b-46cf-8fd7-a7ea67c64cb0">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="88b342b3-e1b7-4ef3-95c2-664ce0d294d8">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="79926001-a767-4658-9d56-cdbfc8140de9">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="c58f5fea-0319-4046-932d-e695ebe20b47">
+          <HdvViewModelPresetCollection.UserPresets>
+            <HdvViewModelPreset Name="Wait analysis - with ready thread" GraphColumnCount="53" KeyColumnCount="9" RightFrozenColumnCount="55" InitialFilterQuery="" InitialSelectionQuery="([Series Name]:=&quot;NewProcess&quot; AND NOT ([NewProcess]:=&quot;Idle (0)&quot;))">
+              <HdvViewModelPreset.ColumnMetadataEntries>
+                <ColumnMetadataEntry Name="NewThreadId" ColumnMetadata="EndThreadId" />
+                <ColumnMetadataEntry Name="SwitchInTime (s)" ColumnMetadata="StartTime" />
+                <ColumnMetadataEntry Name="NewInSwitchTime (us)" ColumnMetadata="Duration" />
+                <ColumnMetadataEntry Name="Cpu" ColumnMetadata="ResourceId" />
+                <ColumnMetadataEntry Name="TimeSinceLast (us)" ColumnMetadata="WaitDuration" />
+                <ColumnMetadataEntry Name="SwitchInTime (s)" ColumnMetadata="WaitEndTime" />
+              </HdvViewModelPreset.ColumnMetadataEntries>
+              <HdvViewModelPreset.ConfigurableColumns>
+                <HdvColumnViewModelPreset Name="NewProcess Name" SortPriority="1" Width="180" />
+                <HdvColumnViewModelPreset Name="NewProcess" IsVisible="True" SortPriority="2" Width="133" />
+                <HdvColumnViewModelPreset Name="NewThreadId" IsVisible="True" SortPriority="3" TextAlignment="Right" Width="80" />
+                <HdvColumnViewModelPreset Name="NewThreadStack" IsVisible="True" SortPriority="4" Width="299" />
+                <HdvColumnViewModelPreset Name="ReadyingProcess Name" SortPriority="5" Width="180" />
+                <HdvColumnViewModelPreset Name="ReadyingProcess" IsVisible="True" SortPriority="6" Width="115" />
+                <HdvColumnViewModelPreset Name="ReadyingThreadId" IsVisible="True" SortPriority="7" TextAlignment="Right" Width="66" />
+                <HdvColumnViewModelPreset Name="ReadyThreadStack" IsVisible="True" SortPriority="8" Width="146" />
+                <HdvColumnViewModelPreset Name="ReadyTime (s)" SortPriority="9" TextAlignment="Right" Width="120" />
+                <HdvColumnViewModelPreset Name="Count" AggregationMode="Count" IsVisible="True" SortPriority="10" TextAlignment="Right" Width="50" />
+                <HdvColumnViewModelPreset Name="TimeSinceLast (us)" AggregationMode="Sum" IsVisible="True" SortPriority="11" TextAlignment="Right" Width="120" />
+                <HdvColumnViewModelPreset Name="TimeSinceLast (us)" AggregationMode="Max" IsVisible="True" SortPriority="12" TextAlignment="Right" Width="120" />
+                <HdvColumnViewModelPreset Name="Ready (us)" AggregationMode="Sum" IsVisible="True" SortPriority="13" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="Ready (us)" AggregationMode="Max" SortPriority="14" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="Waits (us)" AggregationMode="Sum" IsVisible="True" SortPriority="15" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="Waits (us)" AggregationMode="Max" SortPriority="16" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="Count:Waits" AggregationMode="Sum" SortPriority="17" TextAlignment="Right" Width="70" />
+                <HdvColumnViewModelPreset Name="SwitchInTime (s)" SortPriority="18" TextAlignment="Right" Width="120" />
+                <HdvColumnViewModelPreset Name="LastSwitchOutTime (s)" SortPriority="19" TextAlignment="Right" Width="120" />
+                <HdvColumnViewModelPreset Name="NextSwitchOutTime (s)" SortPriority="20" TextAlignment="Right" Width="120" />
+                <HdvColumnViewModelPreset Name="NewPrevOutPri" SortPriority="21" TextAlignment="Right" Width="70" />
+                <HdvColumnViewModelPreset Name="NewInPri" SortPriority="22" TextAlignment="Right" Width="70" />
+                <HdvColumnViewModelPreset Name="NewOutPri" SortPriority="23" TextAlignment="Right" Width="70" />
+                <HdvColumnViewModelPreset Name="NewQnt" SortPriority="24" TextAlignment="Right" Width="60" />
+                <HdvColumnViewModelPreset Name="NewPrevState" SortPriority="25" Width="100" />
+                <HdvColumnViewModelPreset Name="NewPrevWaitReason" SortPriority="26" Width="100" />
+                <HdvColumnViewModelPreset Name="NewPrevWaitMode" SortPriority="27" Width="80" />
+                <HdvColumnViewModelPreset Name="NewState" SortPriority="28" Width="100" />
+                <HdvColumnViewModelPreset Name="NewWaitReason" SortPriority="29" Width="100" />
+                <HdvColumnViewModelPreset Name="NewWaitMode" SortPriority="30" Width="80" />
+                <HdvColumnViewModelPreset Name="NewPriDecr" SortPriority="31" TextAlignment="Right" Width="60" />
+                <HdvColumnViewModelPreset Name="OldProcess Name" SortPriority="32" Width="180" />
+                <HdvColumnViewModelPreset Name="OldProcess" SortPriority="33" Width="200" />
+                <HdvColumnViewModelPreset Name="OldThreadId" SortPriority="34" TextAlignment="Right" Width="80" />
+                <HdvColumnViewModelPreset Name="OldOutPri" SortPriority="35" TextAlignment="Right" Width="70" />
+                <HdvColumnViewModelPreset Name="OldQnt" SortPriority="36" TextAlignment="Right" Width="60" />
+                <HdvColumnViewModelPreset Name="OldInSwitchTime (us)" AggregationMode="Sum" SortPriority="37" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="OldState" SortPriority="38" Width="80" />
+                <HdvColumnViewModelPreset Name="OldWaitReason" SortPriority="39" Width="100" />
+                <HdvColumnViewModelPreset Name="OldWaitMode" SortPriority="40" Width="80" />
+                <HdvColumnViewModelPreset Name="Cpu" SortPriority="41" TextAlignment="Right" Width="50" />
+                <HdvColumnViewModelPreset Name="IdealCpu" SortPriority="42" TextAlignment="Right" Width="60" />
+                <HdvColumnViewModelPreset Name="PrevCState" SortPriority="43" TextAlignment="Right" Width="60" />
+                <HdvColumnViewModelPreset Name="NewThreadStartModule" SortPriority="44" Width="200" />
+                <HdvColumnViewModelPreset Name="NewThreadStartFunction" SortPriority="45" Width="200" />
+                <HdvColumnViewModelPreset Name="ReadyingThreadStartModule" SortPriority="46" Width="200" />
+                <HdvColumnViewModelPreset Name="ReadyingThreadStartFunction" SortPriority="47" Width="200" />
+                <HdvColumnViewModelPreset Name="OldThreadStartModule" SortPriority="48" Width="200" />
+                <HdvColumnViewModelPreset Name="OldThreadStartFunction" SortPriority="49" Width="200" />
+                <HdvColumnViewModelPreset Name="NewInSwitchTime (us)" AggregationMode="Sum" SortPriority="50" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="CPU Usage (ms)" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="% CPU Usage" AggregationMode="Sum" IsVisible="True" SortPriority="51" TextAlignment="Right" Width="82" />
+              </HdvViewModelPreset.ConfigurableColumns>
+            </HdvViewModelPreset>
+          </HdvViewModelPresetCollection.UserPresets>
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="b0b4901b-0981-4842-b282-2a9904c53280">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="8d943a59-1562-425a-a65e-3932e457258b">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="9cfb2296-2c89-45af-a5bd-23b4885dcbab">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="7c60aeff-a47f-4ba8-942c-d2b154087ab9">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="3c18eb9c-2211-4988-bf94-bb029e4ce96e">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="a4a4ee28-f3e3-43f0-8b35-6fc4e37e8675">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="5279a15b-e0ad-4ec4-8d80-a8bc6bb8b7c8">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="3b77a6f0-391f-4d84-9ee9-67e7bae59fd1">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="cb079a8b-de14-4516-9f83-6c5695b0845a">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="ec60ccb2-4409-444e-98fa-792c5b3c36da">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="1fe3bbaa-6738-41b9-941e-7a6825821b35">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="d68e0a4e-52b1-4e1a-b83a-cddf45661efb">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="96560002-ea30-4a11-af10-52b51dbdb2a6">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="0d63da12-a68a-4ea8-8a12-dadd30f0fa1d">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="f05d032f-f475-4f4f-bbf6-c24c2b594f0f">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="faa52878-623e-4f74-9ed9-a65e379ccdd5">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="a1df89f9-5b2a-449e-aaab-1bcc3fd25c84">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="00f566da-55ea-4e31-a242-fb28c798a63e">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="920e6241-3dea-46c4-8e4f-04ce08f62c0a">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="0588f34c-77f0-48a3-a4fd-2e0a462ea764">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="24d87055-643a-4424-af3b-275593bf0f72">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="04f69f98-176e-4d1c-b44e-97f734996ab8">
+          <HdvViewModelPresetCollection.UserPresets>
+            <HdvViewModelPreset Name="Activity by Process, Provider, Opcode" GraphColumnCount="36" KeyColumnCount="4" LeftFrozenColumnCount="5" RightFrozenColumnCount="34" InitialFilterQuery="" InitialSelectionQuery="" InitialExpansionQuery="">
+              <HdvViewModelPreset.ColumnMetadataEntries>
+                <ColumnMetadataEntry Name="Time (s)" ColumnMetadata="StartTime" />
+                <ColumnMetadataEntry Name="Time (s)" ColumnMetadata="EndTime" />
+                <ColumnMetadataEntry Name="ThreadId" ColumnMetadata="EndThreadId" />
+              </HdvViewModelPreset.ColumnMetadataEntries>
+              <HdvViewModelPreset.ConfigurableColumns>
+                <HdvColumnViewModelPreset Name="Process" IsVisible="True" SortPriority="9" Width="150" />
+                <HdvColumnViewModelPreset Name="Provider Name" IsVisible="True" SortPriority="1" Width="200" />
+                <HdvColumnViewModelPreset Name="Task Name" SortPriority="2" Width="80" />
+                <HdvColumnViewModelPreset Name="Opcode Name" IsVisible="True" SortPriority="3" Width="80" />
+                <HdvColumnViewModelPreset Name="Event Name" IsVisible="True" SortPriority="4" Width="100" />
+                <HdvColumnViewModelPreset Name="Provider Id" SortPriority="5" Width="100" />
+                <HdvColumnViewModelPreset Name="Provider Type" SortPriority="6" Width="100" />
+                <HdvColumnViewModelPreset Name="Cpu" IsVisible="True" SortPriority="7" Width="30" />
+                <HdvColumnViewModelPreset Name="ThreadId" IsVisible="True" SortPriority="8" Width="50" />
+                <HdvColumnViewModelPreset Name="Process Name" IsVisible="True" SortPriority="10" Width="150" />
+                <HdvColumnViewModelPreset Name="Opcode/Type " SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Level" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Version" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Task" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Keyword" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Channel" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Id" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="UserDataLength" AggregationMode="Sum" SortPriority="-1" Width="30" />
+                <HdvColumnViewModelPreset Name="etw:ActivityId" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="etw:Related ActivityId" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="etw:UserSid" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="etw:SessionId" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="Stack" SortPriority="-1" Width="100" />
+                <HdvColumnViewModelPreset Name="Thread Start Module" SortPriority="-1" Width="100" />
+                <HdvColumnViewModelPreset Name="Thread Start Function" SortPriority="-1" Width="100" />
+                <HdvColumnViewModelPreset Name="Field 1" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 2" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 3" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 4" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 5" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 6" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 7" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Count" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" Width="80" />
+                <HdvColumnViewModelPreset Name="Time (s)" IsVisible="True" SortPriority="11" Width="80" />
+              </HdvViewModelPreset.ConfigurableColumns>
+            </HdvViewModelPreset>
+            <HdvViewModelPreset Name="MultiProvider Events" GraphColumnCount="48" KeyColumnCount="4" LeftFrozenColumnCount="5" RightFrozenColumnCount="46" InitialFilterQuery="[Provider Name]:~=&quot;Multi-&quot;" InitialSelectionQuery="" InitialExpansionQuery="">
+              <HdvViewModelPreset.ColumnMetadataEntries>
+                <ColumnMetadataEntry Name="Time (s)" ColumnMetadata="StartTime" />
+                <ColumnMetadataEntry Name="Time (s)" ColumnMetadata="EndTime" />
+                <ColumnMetadataEntry Name="ThreadId" ColumnMetadata="EndThreadId" />
+              </HdvViewModelPreset.ColumnMetadataEntries>
+              <HdvViewModelPreset.ConfigurableColumns>
+                <HdvColumnViewModelPreset Name="Process" IsVisible="True" SortPriority="9" Width="150" />
+                <HdvColumnViewModelPreset Name="Provider Name" IsVisible="True" SortPriority="1" Width="200" />
+                <HdvColumnViewModelPreset Name="Task Name" SortPriority="2" Width="80" />
+                <HdvColumnViewModelPreset Name="Opcode Name" IsVisible="True" SortPriority="3" Width="80" />
+                <HdvColumnViewModelPreset Name="Event Name" IsVisible="True" SortPriority="4" Width="100" />
+                <HdvColumnViewModelPreset Name="Provider Id" SortPriority="5" Width="100" />
+                <HdvColumnViewModelPreset Name="Provider Type" SortPriority="6" Width="100" />
+                <HdvColumnViewModelPreset Name="Cpu" IsVisible="True" SortPriority="7" Width="30" />
+                <HdvColumnViewModelPreset Name="ThreadId" IsVisible="True" SortPriority="8" Width="50" />
+                <HdvColumnViewModelPreset Name="Process Name" IsVisible="True" SortPriority="10" Width="150" />
+                <HdvColumnViewModelPreset Name="Opcode/Type " SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Level" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Version" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Task" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Keyword" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Channel" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Id" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="UserDataLength" AggregationMode="Sum" SortPriority="-1" Width="30" />
+                <HdvColumnViewModelPreset Name="etw:ActivityId" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="etw:Related ActivityId" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="etw:UserSid" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="etw:SessionId" SortPriority="-1" Width="60" />
+                <HdvColumnViewModelPreset Name="Stack" SortPriority="-1" Width="100" />
+                <HdvColumnViewModelPreset Name="Thread Start Module" SortPriority="-1" Width="100" />
+                <HdvColumnViewModelPreset Name="Thread Start Function" SortPriority="-1" Width="100" />
+                <HdvColumnViewModelPreset Name="Field 1" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 2" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 3" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 4" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 5" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 6" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 7" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 8" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 9" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 10" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 11" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 12" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 13" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 14" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 15" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 16" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 17" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 18" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Field 19" IsVisible="True" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="Count" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" Width="80" />
+                <HdvColumnViewModelPreset Name="Time (s)" IsVisible="True" SortPriority="11" Width="80" />
+              </HdvViewModelPreset.ConfigurableColumns>
+            </HdvViewModelPreset>
+          </HdvViewModelPresetCollection.UserPresets>
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="cbbd1db6-d7e2-4410-8784-f3df48ad56a5">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="7ccef571-f72c-4bfa-891d-3106b7bbe54a">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="a3a3bf45-7ee8-45eb-95c1-0369c31420ce">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="3bc03cbc-93e0-4ffb-89ae-f80c8c03f568">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="da13748b-71c7-4ba1-a61d-6ae4e527e261">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="31b88db9-1be9-42fa-9452-3cd560899212">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="b855361e-7be0-4bc8-a754-3e8507715ca5">
+          <HdvViewModelPresetCollection.UserPresets>
+            <HdvViewModelPreset Name="Stack based - inclusive" GraphColumnCount="19" KeyColumnCount="9" RightFrozenColumnCount="21" InitialFilterQuery="[DPC/ISR]:=&quot;DPC&quot; OR [DPC/ISR]:=&quot;ISR&quot; OR [Process Name]:=Idle" InitialFilterShouldKeep="False" InitialSelectionQuery="([Series Name]:=&quot;Process&quot; AND NOT ([Process]:=&quot;Idle (0)&quot;))" InitialExpansionQuery="" GraphFilterColumnName="Count">
+              <HdvViewModelPreset.ColumnMetadataEntries>
+                <ColumnMetadataEntry Name="Thread ID" ColumnMetadata="EndThreadId" />
+                <ColumnMetadataEntry Name="TimeStamp" ColumnMetadata="EndTime" />
+                <ColumnMetadataEntry Name="Weight" ColumnMetadata="Duration" />
+                <ColumnMetadataEntry Name="CPU" ColumnMetadata="ResourceId" />
+              </HdvViewModelPreset.ColumnMetadataEntries>
+              <HdvViewModelPreset.ConfigurableColumns>
+                <HdvColumnViewModelPreset Name="Process Name" SortPriority="1" Width="180" />
+                <HdvColumnViewModelPreset Name="Display Name" SortPriority="2" Width="200" />
+                <HdvColumnViewModelPreset Name="Process" IsVisible="True" SortPriority="3" Width="200" />
+                <HdvColumnViewModelPreset Name="Thread ID" IsVisible="True" SortPriority="9" TextAlignment="Right" Width="80" />
+                <HdvColumnViewModelPreset Name="Stack" IsVisible="True" SortPriority="4" Width="623" />
+                <HdvColumnViewModelPreset Name="Module" SortPriority="5" Width="124" />
+                <HdvColumnViewModelPreset Name="Function" SortPriority="6" Width="184" />
+                <HdvColumnViewModelPreset Name="Address" SortPriority="8" TextAlignment="Right" Width="140" />
+                <HdvColumnViewModelPreset Name="Count" AggregationMode="Sum" IsVisible="True" SortPriority="11" TextAlignment="Right" Width="60" />
+                <HdvColumnViewModelPreset Name="Weight" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="TimeStamp" SortPriority="13" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="CPU" SortPriority="10" TextAlignment="Right" Width="40" />
+                <HdvColumnViewModelPreset Name="Priority" SortPriority="14" TextAlignment="Right" Width="80" />
+                <HdvColumnViewModelPreset Name="Thread Start Module" SortPriority="15" Width="140" />
+                <HdvColumnViewModelPreset Name="Thread Start Function" SortPriority="16" Width="160" />
+                <HdvColumnViewModelPreset Name="DPC/ISR" SortPriority="7" Width="184" />
+                <HdvColumnViewModelPreset Name="All Count" AggregationMode="Count" SortPriority="17" Width="80" />
+                <HdvColumnViewModelPreset Name="% Weight" AggregationMode="Sum" IsVisible="True" SortPriority="18" TextAlignment="Right" Width="80" />
+              </HdvViewModelPreset.ConfigurableColumns>
+            </HdvViewModelPreset>
+            <HdvViewModelPreset Name="Module and function based - exclusive" GraphColumnCount="19" KeyColumnCount="10" RightFrozenColumnCount="21" InitialFilterQuery="[DPC/ISR]:=&quot;DPC&quot; OR [DPC/ISR]:=&quot;ISR&quot;" InitialFilterShouldKeep="False" InitialSelectionQuery="([Series Name]:=&quot;Process&quot; AND NOT ([Process]:=&quot;Idle (0)&quot;))">
+              <HdvViewModelPreset.ColumnMetadataEntries>
+                <ColumnMetadataEntry Name="TimeStamp" ColumnMetadata="EndTime" />
+                <ColumnMetadataEntry Name="Weight" ColumnMetadata="Duration" />
+                <ColumnMetadataEntry Name="CPU" ColumnMetadata="ResourceId" />
+                <ColumnMetadataEntry Name="Thread ID" ColumnMetadata="EndThreadId" />
+              </HdvViewModelPreset.ColumnMetadataEntries>
+              <HdvViewModelPreset.ConfigurableColumns>
+                <HdvColumnViewModelPreset Name="Process Name" Width="180" />
+                <HdvColumnViewModelPreset Name="Display Name" Width="200" />
+                <HdvColumnViewModelPreset Name="Process" IsVisible="True" Width="200" />
+                <HdvColumnViewModelPreset Name="Thread ID" IsVisible="True" TextAlignment="Right" Width="80" />
+                <HdvColumnViewModelPreset Name="Stack" Width="200" />
+                <HdvColumnViewModelPreset Name="Module" IsVisible="True" Width="124" />
+                <HdvColumnViewModelPreset Name="Function" IsVisible="True" Width="184" />
+                <HdvColumnViewModelPreset Name="DPC/ISR" Width="184" />
+                <HdvColumnViewModelPreset Name="Address" TextAlignment="Right" Width="140" />
+                <HdvColumnViewModelPreset Name="CPU" TextAlignment="Right" Width="40" />
+                <HdvColumnViewModelPreset Name="Weight" AggregationMode="Sum" IsVisible="True" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="TimeStamp" TextAlignment="Right" Width="100" />
+                <HdvColumnViewModelPreset Name="Count" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" SortPriority="1" TextAlignment="Right" Width="60" />
+                <HdvColumnViewModelPreset Name="Priority" TextAlignment="Right" Width="80" />
+                <HdvColumnViewModelPreset Name="Thread Start Module" SortPriority="-1" Width="140" />
+                <HdvColumnViewModelPreset Name="Thread Start Function" SortPriority="-1" Width="160" />
+                <HdvColumnViewModelPreset Name="All Count" AggregationMode="Count" SortPriority="-1" Width="80" />
+                <HdvColumnViewModelPreset Name="% Weight" AggregationMode="Sum" IsVisible="True" SortOrder="Descending" TextAlignment="Right" Width="80" />
+              </HdvViewModelPreset.ConfigurableColumns>
+            </HdvViewModelPreset>
+          </HdvViewModelPresetCollection.UserPresets>
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="60578268-c574-4c17-9097-9c607b0b6c82">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="db839752-0e71-421f-99ff-51e2abbb4af5">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="54a0f0af-ac5d-4285-8276-ec3bf6b9b495">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="BBC8F512-A49B-451A-90FC-8497F20CFAD7">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="0F9F86E1-77EF-41FF-84AB-F412A49B1CB7">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+        <HdvViewModelPresetCollection Name="Wait Analysis">
+          <HdvViewModelPresetCollection.UserPresets />
+        </HdvViewModelPresetCollection>
+      </HdvPresetCollections.PresetCollections>
+    </HdvPresetCollections>
+  </WpaProfile.HdvPresetCollections>
+</WpaProfile>

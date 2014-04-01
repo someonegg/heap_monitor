@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ETW Class">
+      <UniqueIdentifier>{952223e9-de7c-499b-bb1b-0c8acec76ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{3b7849d7-03b7-4459-b900-4d5286da25c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project Files">
+      <UniqueIdentifier>{cf8cc71e-4cb8-4076-8d76-ea4356512d4e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="etw_event.h">
+      <Filter>ETW Class</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Project Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Project Files</Filter>
+    </ClInclude>
+    <ClInclude Include="etw_session.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="track_system\track_system.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="analyzer\analyzer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="analyzer\symbol.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="etw_event.cpp">
+      <Filter>ETW Class</Filter>
+    </ClCompile>
+    <ClCompile Include="etw_process.cpp">
+      <Filter>ETW Class</Filter>
+    </ClCompile>
+    <ClCompile Include="etw_heap.cpp">
+      <Filter>ETW Class</Filter>
+    </ClCompile>
+    <ClCompile Include="etw_image.cpp">
+      <Filter>ETW Class</Filter>
+    </ClCompile>
+    <ClCompile Include="etw_stack.cpp">
+      <Filter>ETW Class</Filter>
+    </ClCompile>
+    <ClCompile Include="etw_thread.cpp">
+      <Filter>ETW Class</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Project Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hmonitor_etw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="etw_session.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="track_system\track_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="analyzer\analyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="analyzer\symbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
