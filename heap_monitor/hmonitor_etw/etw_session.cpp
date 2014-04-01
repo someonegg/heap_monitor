@@ -245,3 +245,118 @@ void ETWSession::processEvent(PEVENT_RECORD pEvent)
 	if (dur > m_maxDur)
 		m_maxDur = dur;
 }
+
+
+#define MAXIMUM_SESSION_NAME 1024
+
+// KERNEL_LOGGER_NAMEA
+// KERNEL_LOGGER_NAMEW
+#define HEAP_LOGGER_NAMEA   "Heap Logger"
+#define HEAP_LOGGER_NAMEW  L"Heap Logger"
+
+PEVENT_TRACE_PROPERTIES
+AllocateTraceProperties (
+	LPCWSTR LoggerName,
+	LPCWSTR LogFileName
+	)
+{
+	PEVENT_TRACE_PROPERTIES TraceProperties = NULL;
+	ULONG BufferSize;
+
+	BufferSize = sizeof(EVENT_TRACE_PROPERTIES) +
+		(MAXIMUM_SESSION_NAME + MAX_PATH) * sizeof(WCHAR);
+
+	TraceProperties = (PEVENT_TRACE_PROPERTIES)malloc(BufferSize);
+
+	ZeroMemory(TraceProperties, BufferSize);
+	TraceProperties->Wnode.BufferSize = BufferSize;
+	TraceProperties->Wnode.Flags = WNODE_FLAG_TRACED_GUID;
+	TraceProperties->LoggerNameOffset = sizeof(EVENT_TRACE_PROPERTIES);
+	TraceProperties->LogFileNameOffset = sizeof(EVENT_TRACE_PROPERTIES) +
+    (MAXIMUM_SESSION_NAME * sizeof(WCHAR));
+
+	if (LoggerName != NULL) {
+		wcscpy((LPWSTR)((PCHAR)TraceProperties + TraceProperties->LoggerNameOffset), LoggerName);
+	}
+
+	if (LogFileName != NULL) {
+		wcscpy((LPWSTR)((PCHAR)TraceProperties + TraceProperties->LogFileNameOffset), LogFileName);
+	}
+
+	return TraceProperties;
+}
+
+VOID
+FreeTraceProperties (
+	PEVENT_TRACE_PROPERTIES TraceProperties
+	)
+{
+	free(TraceProperties);
+	return;
+}
+
+EXTERN_C const GUID FAR ProcessTraceGuid;
+EXTERN_C const GUID FAR ImageTraceGuid;
+EXTERN_C const GUID FAR ThreadTraceGuid;
+EXTERN_C const GUID FAR HeapTraceGuid;
+
+bool StartKernelTrace(PEVENT_TRACE_PROPERTIES &TraceProperties)
+{
+	bool fRet = false;
+	bool fTraceStarted = false;
+
+	TraceProperties = AllocateTraceProperties(KERNEL_LOGGER_NAMEW, NULL);
+
+	TraceProperties->LogFileMode = EVENT_TRACE_REAL_TIME_MODE;
+	TraceProperties->Wnode.ClientContext = 1; // Use QueryPerformanceCounter for time stamps
+	TraceProperties->Wnode.Guid = SystemTraceControlGuid;
+	TraceProperties->EnableFlags = EVENT_TRACE_FLAG_PROCESS | EVENT_TRACE_FLAG_THREAD | EVENT_TRACE_FLAG_IMAGE_LOAD;
+	TraceProperties->BufferSize = 64;
+	TraceProperties->MinimumBuffers = 64;
+	TraceProperties->MaximumBuffers = 256;
+
+	TRACEHANDLE SessionHandle = 0;
+	ULONG Status = StartTraceW(&SessionHandle, KERNEL_LOGGER_NAMEW, TraceProperties);
+	if (Status != ERROR_SUCCESS) {
+		goto Exit;
+	}
+
+	fTraceStarted = true;
+
+	CLASSIC_EVENT_ID EventId[2];
+	ZeroMemory(EventId, sizeof(EventId));
+	EventId[0].EventGuid = ImageTraceGuid;
+	EventId[0].Type =  EVENT_TRACE_TYPE_LOAD;
+	EventId[1].EventGuid = ThreadTraceGuid;
+	EventId[1].Type = EVENT_TRACE_TYPE_START;
+
+	Status = TraceSetInformation(SessionHandle,
+								 TraceStackTracingInfo,
+								 EventId,
+								 sizeof(EventId));
+
+	if (Status != ERROR_SUCCESS) {
+		goto Exit;
+	}
+
+	fRet = true;
+
+Exit:
+	if (!fRet) {
+		if (fTraceStarted) {
+			ControlTraceW(NULL, KERNEL_LOGGER_NAMEW, TraceProperties, EVENT_TRACE_CONTROL_STOP);
+		}
+
+		FreeTraceProperties(TraceProperties);
+		TraceProperties = NULL;
+	}
+
+	return fRet;
+}
+
+void StopKernelTrace(PEVENT_TRACE_PROPERTIES &TraceProperties)
+{
+	ControlTraceW(NULL, KERNEL_LOGGER_NAMEW, TraceProperties, EVENT_TRACE_CONTROL_STOP);
+	FreeTraceProperties(TraceProperties);
+	TraceProperties = NULL;
+}

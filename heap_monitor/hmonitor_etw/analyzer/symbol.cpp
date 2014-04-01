@@ -51,7 +51,7 @@ bool symLoadModule(const char *dllName)
 	if (iter != g_loadedModuleMap.end())
 		return true;
 
-	HMODULE hDLL = LoadLibraryExA(dllName, NULL, DONT_RESOLVE_DLL_REFERENCES);
+	HMODULE hDLL = LoadLibraryExA(dllName, NULL, LOAD_LIBRARY_AS_IMAGE_RESOURCE);
 	if (!hDLL)
 		return false;
 
