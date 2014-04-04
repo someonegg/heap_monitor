@@ -12,11 +12,17 @@
 #include "track_system/snapshot.h"
 
 
+struct lua_State;
+
 class TSSAnalyzer
 {
 public:
 	TSSAnalyzer();
 	~TSSAnalyzer();
+
+	bool Init();
+
+	void Term();
 
 	void UpdateSnapshot();
 
@@ -118,7 +124,11 @@ protected:
 	};
 
 	void parseSortArgs(
-		int argc, wchar_t** argv, size_t &top, int &st);
+		int argc, wchar_t** argv,
+		size_t &top, int &st, const char* scriptTmpl);
+
+	template <class S, class SQ>
+	void sortUseQueue(const S &s, SQ &sq);
 
 	template <class S, class CPS>
 	void sortSetByLimit(const S &s, CPS &out, size_t top, int st);
@@ -143,10 +153,19 @@ protected:
 		);
 
 protected:
+	bool renderScript(const char* scriptTmpl, const char* param);
+
+	template <class T>
+	bool fitCondition(const T &t);
+
+	bool fitCondition(const TSS_Stack &t);
+
+protected:
 	TSS_System m_sys;
 
 	size_t m_limitTop;
 	int m_sortType;
+	bool m_hasCondition;
 
 	// format
 	size_t m_wthPid;
@@ -161,6 +180,8 @@ protected:
 	size_t m_wthImgid;
 	size_t m_wthHeapid;
 	size_t m_wthTid;
+
+	lua_State* m_L;
 };
 
 

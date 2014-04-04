@@ -11,7 +11,8 @@ struct IIRAStackManager
 {
 	virtual const IRA_SymS* newStack(
 		size_t depth,
-		const IRA* frames
+		const IRA* frames,
+		size_t &imgIdx
 		) = 0;
 };
 
@@ -118,7 +119,13 @@ public:
 			for (size_t i = 0; i < si.depth && i < MAX_STACK_DEPTH; ++i)
 				frames[i] = addr2IRA(si.frames[i]);
 			stack.id = si.stackid;
-			stack.ira_syms = m_stackManager->newStack(si.depth, frames);
+			size_t imgIdx = 0;
+			stack.ira_syms = m_stackManager->newStack(si.depth, frames, imgIdx);
+			CImage* img = imageByIndex(imgIdx);
+			if (img != NULL)
+			{
+				stack.imgId = img->id;
+			}
 		}
 
 		if (ppStack != NULL)
@@ -132,6 +139,19 @@ public:
 		if (itor != m_images.end())
 		{
 			return &(itor->second);
+		}
+		return NULL;
+	}
+	CImage* imageByIndex(size_t index)
+	{
+		for (ImageArray::iterator itor = m_imageIndex.begin();
+			itor < m_imageIndex.end(); ++itor)
+		{
+			const CImage* img = *itor;
+			if (img->index == index)
+			{
+				return (CImage*)img;
+			}
 		}
 		return NULL;
 	}
@@ -332,6 +352,13 @@ public:
 			{
 				s->StatBy<AllocCountIdx>().Increase(1);
 				s->StatBy<AllocBytesIdx>().Increase(size);
+
+				CImage* i = image(s->imgId);
+				if (i != NULL)
+				{
+					i->StatBy<AllocCountIdx>().Increase(1);
+					i->StatBy<AllocBytesIdx>().Increase(size);
+				}
 			}
 		}
 	}
@@ -398,6 +425,13 @@ public:
 			{
 				s->StatBy<AllocCountIdx>().Decrease(1);
 				s->StatBy<AllocBytesIdx>().Decrease(size);
+
+				CImage* i = image(s->imgId);
+				if (i != NULL)
+				{
+					i->StatBy<AllocCountIdx>().Decrease(1);
+					i->StatBy<AllocBytesIdx>().Decrease(size);
+				}
 			}
 		}
 	}
@@ -497,12 +531,21 @@ public:
 	CTrackSystem()
 		: m_tsLast()
 	{
+		// reserve
+		m_innerImg.reserve(100);
 	}
 
 public:
 	void SetFocus(const char* name)
 	{
 		m_focus.push_back(std::string(name));
+	}
+
+	void SetInnerDll(const char* dll)
+	{
+		std::string s = "\\";
+		s += dll;
+		m_innerDlls.push_back(s);
 	}
 
 	void TrackBegin()
@@ -576,8 +619,15 @@ public:
 		ProcessMap::iterator itor = m_processes.find(pid);
 		if (itor != m_processes.end())
 		{
+			size_t e = m_nimImg.end();
+			size_t i = m_nimImg.append(name);
+			if (i >= e && ifInnerImg(name))
+			{
+				m_innerImg.push_back(i);
+			}
+
 			itor->second.OnImageLoad(
-				tsLoad, base, size, m_nimImg.append(name), siLoad);
+				tsLoad, base, size, i, siLoad);
 		}
 	}
 	void OnImageUnload(
@@ -721,7 +771,8 @@ public:
 
 	const IRA_SymS* newStack(
 		size_t depth,
-		const IRA* frames
+		const IRA* frames,
+		size_t &imgIdx
 		)
 	{
 		ASSERT(depth != 0 && frames != NULL);
@@ -742,18 +793,56 @@ public:
 			stackid = id.u64;
 		}
 
-		IRA_SymS &ira_syms = m_stacks[stackid];
-		if (ira_syms.empty())
+		StackInfo &s = m_stacks[stackid];
+		if (s.ira_syms.empty())
 		{
-			ira_syms.resize(depth);
+			bool fSet = false;
+			s.imgIdx = frames[depth - 1].index;
+
+			s.ira_syms.resize(depth);
 			for (size_t i = 0; i < depth; ++i)
-				ira_syms[i].ira = frames[i];
+			{
+				IRA ira = frames[i];
+				s.ira_syms[i].ira = ira;
+
+				if (!fSet)
+				{
+					if (!std::binary_search(
+						m_innerImg.begin(), m_innerImg.end(), ira.index))
+					{
+						fSet = true;
+						s.imgIdx = ira.index;
+					}
+				}
+			}
 		}
 
-		return &ira_syms;
+		imgIdx = s.imgIdx;
+		return &(s.ira_syms);
 	}
 
 protected:
+	bool ifInnerImg(const char* name) const
+	{
+		size_t l = strlen(name);
+		for (std::list<std::string>::const_iterator itor = m_innerDlls.begin();
+			itor != m_innerDlls.end(); ++itor)
+		{
+			const std::string &s = *itor;
+			if (l > s.size() &&
+				_strcmpi(name + l - s.size(), s.c_str()) == 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+protected:
+	std::list<std::string> m_focus;
+
+	std::list<std::string> m_innerDlls;
+
 	KCriticalSection m_lock;
 	typedef KAutoLock<KCriticalSection> AutoLock;
 
@@ -765,12 +854,18 @@ protected:
 	// image index is based on this list
 	jtwsm::nameidx_map<char> m_nimImg;
 
+	typedef std::vector<size_t> IndexSet;
+	IndexSet m_innerImg;
+
 	tst_time m_tsLast;
 
-	typedef std::map<tst_stackid, IRA_SymS> StackMap;
+	struct StackInfo
+	{
+		IRA_SymS ira_syms;
+		size_t imgIdx;
+	};
+	typedef std::map<tst_stackid, StackInfo> StackMap;
 	StackMap m_stacks;
-
-	std::list<std::string> m_focus;
 };
 
 

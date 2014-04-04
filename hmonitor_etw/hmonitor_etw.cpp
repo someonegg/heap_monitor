@@ -7,6 +7,7 @@
 #include "track_system/track_system.h"
 #include "analyzer/symbol.h"
 #include "analyzer/analyzer.h"
+#include <fstream>
 
 #include "jtwsm/thread_base.h"
 #include "utility/qpc_helper.h"
@@ -254,6 +255,37 @@ private:
 } g_heapMonitor;
 
 
+bool initInnerDlls()
+{
+	std::ifstream f;
+	f.open("innerdlls.txt");
+	if (!f)
+	{
+		return false;
+	}
+
+	while (!f.eof())
+	{
+		// 11090134205444998708>11090134206328498471
+		char line[512];
+		f.getline(line, sizeof(line));
+
+		if (strlen(line) == 0)
+		{
+			continue;
+		}
+
+		if (!f)
+		{
+			return false;
+		}
+
+		getTrackSystem()->SetInnerDll(line);
+	}
+
+	return true;
+}
+
 std::string readImgName(int argc, _TCHAR* argv[])
 {
 	const size_t IMAGENAME_MAX = 100;
@@ -379,6 +411,8 @@ void cmdUse(TSSAnalyzer &analyzer, int argc, wchar_t** argv)
 void userCmdLoop()
 {
 	TSSAnalyzer analyzer;
+	analyzer.Init();
+
 	bool fAutoMode = true, lastAutoMode = false;
 
 	const size_t USERCMD_MAX = 50;
@@ -454,6 +488,8 @@ void userCmdLoop()
 		memcpy(lastCmd, cmd, USERCMD_MAX);
 
 	} while (true);
+
+	analyzer.Term();
 }
 
 
@@ -462,6 +498,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	//_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 	setlocale( LC_ALL, "" );
 	SetConsoleTitleW(L"Heap Monitor Controller");
+
+	initInnerDlls();
 
 	std::string imageName = readImgName(argc, argv);
 	getTrackSystem()->SetFocus(imageName.c_str());

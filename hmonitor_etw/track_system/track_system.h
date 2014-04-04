@@ -26,6 +26,10 @@ struct ITrackSystem
 		const char* name
 		) = 0;
 
+	virtual void SetInnerDll(
+		const char* dll
+		) = 0;
+
 	virtual void TrackBegin(
 		) = 0;
 

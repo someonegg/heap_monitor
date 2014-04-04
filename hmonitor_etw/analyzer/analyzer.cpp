@@ -7,10 +7,26 @@
 #include "utility/qpc_helper.h"
 #include <math.h>
 
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+
+
+const char* TMPL_NORMALCONDITION =
+	"function NormalCondition(CountTotal, CountCurrent, CountPeak, BytesTotal, BytesCurrent, BytesPeak)\n"
+	"\treturn (%s)\n"
+	"end\n";
+
+const char* TMPL_STACKCONDITION =
+	"function StackCondition(CountTotal, CountCurrent, CountPeak, BytesTotal, BytesCurrent, BytesPeak, ImgId)\n"
+	"\treturn (%s)\n"
+	"end\n";
+
 
 TSSAnalyzer::TSSAnalyzer()
 	: m_limitTop(6)
 	, m_sortType(ST_CountTotal)
+	, m_hasCondition(false)
 	, m_wthPid()
 	, m_wthPname()
 	, m_wthAllocStat()
@@ -20,6 +36,7 @@ TSSAnalyzer::TSSAnalyzer()
 	, m_wthImgid()
 	, m_wthHeapid()
 	, m_wthTid()
+	, m_L()
 {
 }
 
@@ -27,6 +44,28 @@ TSSAnalyzer::~TSSAnalyzer()
 {
 }
 
+
+bool TSSAnalyzer::Init()
+{
+	m_L = luaL_newstate();
+	if (m_L == NULL)
+	{
+		return false;
+	}
+
+	luaL_openlibs(m_L);
+
+	return true;
+}
+
+void TSSAnalyzer::Term()
+{
+	if (m_L != NULL)
+	{
+		lua_close(m_L);
+		m_L = NULL;
+	}
+}
 
 void TSSAnalyzer::UpdateSnapshot()
 {
@@ -75,14 +114,16 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 	if (_wcsicmp(argv[0], L"processlist") == 0 ||
 		_wcsicmp(argv[0], L"pl") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showProcessList(m_sys.processes);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"processlistext") == 0 ||
 		_wcsicmp(argv[0], L"ple") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showProcessList(m_sys.processes, true);
 		return true;
 	}
@@ -96,56 +137,64 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 	if (_wcsicmp(argv[0], L"stacklist") == 0 ||
 		_wcsicmp(argv[0], L"sl") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_STACKCONDITION);
 		showStackList(m_process->stacks);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"stacklistext") == 0 ||
 		_wcsicmp(argv[0], L"sle") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_STACKCONDITION);
 		showStackList(m_process->stacks, true);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"imagelist") == 0 ||
 		_wcsicmp(argv[0], L"il") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showImageList(m_process->images);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"imagelistext") == 0 ||
 		_wcsicmp(argv[0], L"ile") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showImageList(m_process->images, true);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"heaplist") == 0 ||
 		_wcsicmp(argv[0], L"hl") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showHeapList(m_process->heaps);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"heaplistext") == 0 ||
 		_wcsicmp(argv[0], L"hle") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showHeapList(m_process->heaps, true);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"threadlist") == 0 ||
 		_wcsicmp(argv[0], L"tl") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showThreadList(m_process->threads);
 		return true;
 	}
 	if (_wcsicmp(argv[0], L"threadlistext") == 0 ||
 		_wcsicmp(argv[0], L"tle") == 0)
 	{
-		parseSortArgs(argc - 1, argv + 1, m_limitTop, m_sortType);
+		parseSortArgs(argc - 1, argv + 1,
+			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
 		showThreadList(m_process->threads, true);
 		return true;
 	}
@@ -167,7 +216,11 @@ void TSSAnalyzer::showSortInfo()
 		"CountTotal", "CountCurrent", "CountPeak",
 		"BytesTotal", "BytesCurrent", "BytesPeak"
 	};
-	printf("[Show Top %u, sort by %s]\n", m_limitTop, szST[m_sortType]);
+	printf("[");
+	printf("Show Top %u, sort by %s", m_limitTop, szST[m_sortType]);
+	if (m_hasCondition)
+		printf(", use condition");
+	printf("]\n");
 }
 
 void TSSAnalyzer::showProcessList(
@@ -331,8 +384,26 @@ void TSSAnalyzer::showThreadList(
 
 
 void TSSAnalyzer::parseSortArgs(
-	int argc, wchar_t** argv, size_t &top, int &st)
+	int argc, wchar_t** argv,
+	size_t &top, int &st, const char* scriptTmpl)
 {
+	m_hasCondition = false;
+	if (argc >= 1)
+	{
+		if(_wcsnicmp(argv[0], L"C:", 2) == 0)
+		{
+			char param[512];
+			size_t n = wcstombs(param, argv[0] + 2, sizeof(param));
+			if ((n > 0 && n < sizeof(param)) &&
+				renderScript(scriptTmpl, param))
+			{
+				m_hasCondition = true;
+			}
+			--argc;
+			++argv;
+		}
+	}
+
 	if (argc >= 1)
 	{
 		int tmp = _wtoi(argv[0]);
@@ -369,10 +440,18 @@ void TSSAnalyzer::parseSortArgs(
 }
 
 template <class S, class SQ>
-static void sortUseQueue(const S &s, SQ &sq)
+void TSSAnalyzer::sortUseQueue(const S &s, SQ &sq)
 {
 	for (S::const_iterator itor = s.begin(); itor != s.end(); ++itor)
 	{
+		if (m_hasCondition)
+		{
+			if (fitCondition(*itor))
+			{
+				sq.push(&(*itor));
+			}
+			continue;
+		}
 		sq.push(&(*itor));
 	}
 	sq.sort();
@@ -540,4 +619,81 @@ void TSSAnalyzer::printIRAS(
 		printIRA(*itor);
 		printf("%s", postfix);
 	}
+}
+
+
+bool TSSAnalyzer::renderScript(const char* scriptTmpl, const char* param)
+{
+	char script[1024];
+	size_t n = _snprintf(script, sizeof(script), scriptTmpl, param);
+	if (n > 0 && n < sizeof(script))
+	{
+		return (luaL_dostring(m_L, script) == 0);
+	}
+
+	return false;
+}
+
+template <class T>
+bool TSSAnalyzer::fitCondition(const T &t)
+{
+	const AllocCount &ac = t.StatBy<AllocCountIdx>();
+	const AllocBytes &ab = t.StatBy<AllocBytesIdx>();
+
+	lua_getglobal(m_L, "NormalCondition");
+	if (!lua_isfunction(m_L, -1))
+	{
+		return true;
+	}
+
+	lua_pushinteger(m_L, ac.total);
+	lua_pushinteger(m_L, ac.current);
+	lua_pushinteger(m_L, ac.peak);
+	lua_pushinteger(m_L, ab.total);
+	lua_pushinteger(m_L, ab.current);
+	lua_pushinteger(m_L, ab.peak);
+
+	if (lua_pcall(m_L, 6, 1, 0) != 0)
+	{
+		return true;
+	}
+
+	if (lua_isboolean(m_L, -1))
+	{
+		return (lua_toboolean(m_L, -1) != 0);
+	}
+
+	return true;
+}
+
+bool TSSAnalyzer::fitCondition(const TSS_Stack &t)
+{
+	const AllocCount &ac = t.StatBy<AllocCountIdx>();
+	const AllocBytes &ab = t.StatBy<AllocBytesIdx>();
+
+	lua_getglobal(m_L, "StackCondition");
+	if (!lua_isfunction(m_L, -1))
+	{
+		return true;
+	}
+
+	lua_pushinteger(m_L, ac.total);
+	lua_pushinteger(m_L, ac.current);
+	lua_pushinteger(m_L, ac.peak);
+	lua_pushinteger(m_L, ab.total);
+	lua_pushinteger(m_L, ab.current);
+	lua_pushinteger(m_L, ab.peak);
+	lua_pushinteger(m_L, t.imgId);
+
+	if (lua_pcall(m_L, 7, 1, 0) != 0)
+	{
+		return true;
+	}
+
+	if (lua_isboolean(m_L, -1))
+	{
+		return (lua_toboolean(m_L, -1) != 0);
+	}
+
+	return true;
 }
