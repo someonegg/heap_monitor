@@ -266,7 +266,7 @@ bool initInnerDlls()
 
 	while (!f.eof())
 	{
-		// 11090134205444998708>11090134206328498471
+		// n xxx.dll
 		char line[512];
 		f.getline(line, sizeof(line));
 
@@ -280,7 +280,17 @@ bool initInnerDlls()
 			return false;
 		}
 
-		getTrackSystem()->SetInnerDll(line);
+		char* d = strchr(line, ' ');
+		if (d == NULL)
+		{
+			return false;
+		}
+
+		*d = 0;
+
+		size_t level = atoi(line);
+
+		getTrackSystem()->SetImgLevel(d + 1, level);
 	}
 
 	return true;
@@ -449,6 +459,11 @@ void userCmdLoop()
 		if (_wcsicmp(argv[0], L"exit") == 0)
 		{
 			break;
+		}
+		else if (_wcsicmp(argv[0], L"clear") == 0 ||
+			_wcsicmp(argv[0], L"cls") == 0)
+		{
+			system("cls");
 		}
 		else if (_wcsicmp(argv[0], L"status") == 0)
 		{

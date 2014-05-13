@@ -713,6 +713,8 @@ union luai_Cast { double l_d; long l_l; };
 ** CHANGE them if your system supports long long or does not support long.
 */
 
+#define LUA_USELONGLONG
+
 #if defined(LUA_USELONGLONG)
 
 #define LUA_INTFRMLEN		"ll"

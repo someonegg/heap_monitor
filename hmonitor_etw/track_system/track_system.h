@@ -26,8 +26,9 @@ struct ITrackSystem
 		const char* name
 		) = 0;
 
-	virtual void SetInnerDll(
-		const char* dll
+	virtual void SetImgLevel(
+		const char* name,
+		size_t level
 		) = 0;
 
 	virtual void TrackBegin(

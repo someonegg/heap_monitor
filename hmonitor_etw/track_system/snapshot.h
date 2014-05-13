@@ -52,7 +52,8 @@ public:
 
 	TSS_Stack()
 		: id()
-		, imgId()
+		, imgid()
+		, heapid()
 		, ira_syms()
 	{
 	}
@@ -61,7 +62,8 @@ public:
 	TSS_OPERATOR_EQUAL
 
 	ID id;
-	tst_imgid imgId;
+	tst_imgid imgid;
+	tst_heapid heapid;
 	const IRA_SymS* ira_syms;
 };
 

@@ -18,7 +18,7 @@ const char* TMPL_NORMALCONDITION =
 	"end\n";
 
 const char* TMPL_STACKCONDITION =
-	"function StackCondition(CountTotal, CountCurrent, CountPeak, BytesTotal, BytesCurrent, BytesPeak, ImgId)\n"
+	"function StackCondition(CountTotal, CountCurrent, CountPeak, BytesTotal, BytesCurrent, BytesPeak, ImgId, HeapId)\n"
 	"\treturn (%s)\n"
 	"end\n";
 
@@ -209,7 +209,7 @@ void TSSAnalyzer::showSnapshotInfo()
 		(int)g_QPCHelper.GetTimeSpentMS(m_sys.tsLast) / 1000);
 }
 
-void TSSAnalyzer::showSortInfo()
+void TSSAnalyzer::showSortInfo(size_t total)
 {
 	const char* szST[] =
 	{
@@ -217,7 +217,7 @@ void TSSAnalyzer::showSortInfo()
 		"BytesTotal", "BytesCurrent", "BytesPeak"
 	};
 	printf("[");
-	printf("Show Top %u, sort by %s", m_limitTop, szST[m_sortType]);
+	printf("Show top %u, sort by %s", total, szST[m_sortType]);
 	if (m_hasCondition)
 		printf(", use condition");
 	printf("]\n");
@@ -227,15 +227,15 @@ void TSSAnalyzer::showProcessList(
 	const TSS_System::ProcessS &pl, bool fExt)
 {
 	showSnapshotInfo();
-	showSortInfo();
-	printf("Process List\n");
-	printf("\n");
 
 	if (pl.empty())
 		return;
 
 	std::vector<const TSS_Process*> ss;
 	sortSetByLimit(pl, ss, m_limitTop, m_sortType);
+
+	showSortInfo(ss.size());
+	printf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
@@ -253,15 +253,15 @@ void TSSAnalyzer::showStackList(
 	const TSS_Process::StackS &sl, bool fExt)
 {
 	showSnapshotInfo();
-	showSortInfo();
-	printf("Stack List\n");
-	printf("\n");
 
 	if (sl.empty())
 		return;
 
 	std::vector<const TSS_Stack*> ss;
 	sortSetByLimit(sl, ss, m_limitTop, m_sortType);
+
+	showSortInfo(ss.size());
+	printf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
@@ -285,15 +285,15 @@ void TSSAnalyzer::showImageList(
 	const TSS_Process::ImageS &il, bool fExt)
 {
 	showSnapshotInfo();
-	showSortInfo();
-	printf("Image List\n");
-	printf("\n");
 
 	if (il.empty())
 		return;
 
 	std::vector<const TSS_Image*> ss;
 	sortSetByLimit(il, ss, m_limitTop, m_sortType);
+
+	showSortInfo(ss.size());
+	printf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
@@ -319,15 +319,15 @@ void TSSAnalyzer::showHeapList(
 	const TSS_Process::HeapS &hl, bool fExt)
 {
 	showSnapshotInfo();
-	showSortInfo();
-	printf("Heap List\n");
-	printf("\n");
 
 	if (hl.empty())
 		return;
 
 	std::vector<const TSS_Heap*> ss;
 	sortSetByLimit(hl, ss, m_limitTop, m_sortType);
+
+	showSortInfo(ss.size());
+	printf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
@@ -351,15 +351,15 @@ void TSSAnalyzer::showThreadList(
 	const TSS_Process::ThreadS &tl, bool fExt)
 {
 	showSnapshotInfo();
-	showSortInfo();
-	printf("Thread List\n");
-	printf("\n");
 
 	if (tl.empty())
 		return;
 
 	std::vector<const TSS_Thread*> ss;
 	sortSetByLimit(tl, ss, m_limitTop, m_sortType);
+
+	showSortInfo(ss.size());
+	printf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
@@ -683,9 +683,10 @@ bool TSSAnalyzer::fitCondition(const TSS_Stack &t)
 	lua_pushinteger(m_L, ab.total);
 	lua_pushinteger(m_L, ab.current);
 	lua_pushinteger(m_L, ab.peak);
-	lua_pushinteger(m_L, t.imgId);
+	lua_pushinteger(m_L, t.imgid);
+	lua_pushinteger(m_L, t.heapid);
 
-	if (lua_pcall(m_L, 7, 1, 0) != 0)
+	if (lua_pcall(m_L, 8, 1, 0) != 0)
 	{
 		return true;
 	}

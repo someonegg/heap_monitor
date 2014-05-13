@@ -33,7 +33,7 @@ public:
 
 protected:
 	void showSnapshotInfo();
-	void showSortInfo();
+	void showSortInfo(size_t total);
 
 	void showProcessList(
 		const TSS_System::ProcessS &pl, bool fExt = false);

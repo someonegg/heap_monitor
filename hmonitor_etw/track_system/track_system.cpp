@@ -124,7 +124,7 @@ public:
 			CImage* img = imageByIndex(imgIdx);
 			if (img != NULL)
 			{
-				stack.imgId = img->id;
+				stack.imgid = img->id;
 			}
 		}
 
@@ -291,7 +291,6 @@ public:
 		}
 
 		CThread &thread = m_threads[tid];
-		IRA iraEntry = addr2IRA(entry);
 		thread.tsStart = tsStart;
 		thread.id  = tid;
 		thread.userStack = userStack;
@@ -327,6 +326,10 @@ public:
 		item.size = size;
 		item.tid = tid;
 		item.stackAlloc = appendStack(siAlloc, &(item.cacheStackAlloc));
+		if (item.cacheStackAlloc != NULL)
+		{
+			item.cacheStackAlloc->heapid = heapid;
+		}
 
 		// Stat
 		{
@@ -353,7 +356,7 @@ public:
 				s->StatBy<AllocCountIdx>().Increase(1);
 				s->StatBy<AllocBytesIdx>().Increase(size);
 
-				CImage* i = image(s->imgId);
+				CImage* i = image(s->imgid);
 				if (i != NULL)
 				{
 					i->StatBy<AllocCountIdx>().Increase(1);
@@ -391,7 +394,7 @@ public:
 		if (itor != m_allocItems.end())
 		{
 			tsAlloc = itor->second.tsAlloc;
-			ASSERT (heapid = itor->second.heapid);
+			ASSERT (heapid == itor->second.heapid);
 			size = itor->second.size;
 			tid = itor->second.tid;
 			s = itor->second.cacheStackAlloc;
@@ -426,7 +429,7 @@ public:
 				s->StatBy<AllocCountIdx>().Decrease(1);
 				s->StatBy<AllocBytesIdx>().Decrease(size);
 
-				CImage* i = image(s->imgId);
+				CImage* i = image(s->imgid);
 				if (i != NULL)
 				{
 					i->StatBy<AllocCountIdx>().Decrease(1);
@@ -531,8 +534,6 @@ public:
 	CTrackSystem()
 		: m_tsLast()
 	{
-		// reserve
-		m_innerImg.reserve(100);
 	}
 
 public:
@@ -541,11 +542,13 @@ public:
 		m_focus.push_back(std::string(name));
 	}
 
-	void SetInnerDll(const char* dll)
+	void SetImgLevel(const char* name, size_t level)
 	{
-		std::string s = "\\";
-		s += dll;
-		m_innerDlls.push_back(s);
+		Img_NameLevel nl;
+		nl.name = "\\";
+		nl.name += name;
+		nl.level = level;
+		m_imgLevelByName.push_back(nl);
 	}
 
 	void TrackBegin()
@@ -621,9 +624,9 @@ public:
 		{
 			size_t e = m_nimImg.end();
 			size_t i = m_nimImg.append(name);
-			if (i >= e && ifInnerImg(name))
+			if (i >= e)
 			{
-				m_innerImg.push_back(i);
+				m_imgLevelByIndex[i] = imgLevelByName(name);
 			}
 
 			itor->second.OnImageLoad(
@@ -797,7 +800,7 @@ public:
 		if (s.ira_syms.empty())
 		{
 			bool fSet = false;
-			s.imgIdx = frames[depth - 1].index;
+			size_t index = 0, level = 0;
 
 			s.ira_syms.resize(depth);
 			for (size_t i = 0; i < depth; ++i)
@@ -807,13 +810,30 @@ public:
 
 				if (!fSet)
 				{
-					if (!std::binary_search(
-						m_innerImg.begin(), m_innerImg.end(), ira.index))
+					Index2LevelMap::iterator itor =
+						m_imgLevelByIndex.find(ira.index);
+					if (itor != m_imgLevelByIndex.end())
 					{
-						fSet = true;
-						s.imgIdx = ira.index;
+						if (itor->second == MaxImgLevel)
+						{
+							fSet = true;
+							s.imgIdx = itor->first;
+						}
+						else
+						{
+							if (itor->second > level)
+							{
+								index = itor->first;
+								level = itor->second;
+							}
+						}
 					}
 				}
+			}
+
+			if (!fSet)
+			{
+				s.imgIdx = index;
 			}
 		}
 
@@ -822,26 +842,33 @@ public:
 	}
 
 protected:
-	bool ifInnerImg(const char* name) const
+	static const size_t MaxImgLevel = -1;
+
+	size_t imgLevelByName(const char* name) const
 	{
 		size_t l = strlen(name);
-		for (std::list<std::string>::const_iterator itor = m_innerDlls.begin();
-			itor != m_innerDlls.end(); ++itor)
+		for (std::list<Img_NameLevel>::const_iterator itor = m_imgLevelByName.begin();
+			itor != m_imgLevelByName.end(); ++itor)
 		{
-			const std::string &s = *itor;
+			const std::string &s = itor->name;
 			if (l > s.size() &&
 				_strcmpi(name + l - s.size(), s.c_str()) == 0)
 			{
-				return true;
+				return itor->level;
 			}
 		}
-		return false;
+		return MaxImgLevel;
 	}
 
 protected:
 	std::list<std::string> m_focus;
 
-	std::list<std::string> m_innerDlls;
+	struct Img_NameLevel
+	{
+		std::string name;
+		size_t level;
+	};
+	std::list<Img_NameLevel> m_imgLevelByName;
 
 	KCriticalSection m_lock;
 	typedef KAutoLock<KCriticalSection> AutoLock;
@@ -854,8 +881,8 @@ protected:
 	// image index is based on this list
 	jtwsm::nameidx_map<char> m_nimImg;
 
-	typedef std::vector<size_t> IndexSet;
-	IndexSet m_innerImg;
+	typedef std::map<size_t, size_t> Index2LevelMap;
+	Index2LevelMap m_imgLevelByIndex;
 
 	tst_time m_tsLast;
 
