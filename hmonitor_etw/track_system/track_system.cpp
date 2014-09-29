@@ -280,7 +280,8 @@ public:
 		tst_heapid heapid,
 		bool fExpand,
 		tst_ptdiffer size,
-		unsigned noOfUCRs
+		unsigned noOfUCRs,
+		tst_ptdiffer ss_committed
 		)
 	{
 		HeapMap::iterator itor = m_heaps.find(heapid);
@@ -292,6 +293,7 @@ public:
 			else
 				heap.committed -= size;
 			heap.noOfUCRs = noOfUCRs;
+			heap.ss_committed = ss_committed;
 		}
 	}
 
@@ -697,13 +699,14 @@ public:
 		tst_heapid heapid,
 		bool fExpand,
 		tst_ptdiffer size,
-		unsigned noOfUCRs
+		unsigned noOfUCRs,
+		tst_ptdiffer ss_committed
 		)
 	{
 		ProcessMap::iterator itor = m_processes.find(pid);
 		if (itor != m_processes.end())
 		{
-			itor->second.OnHeapSpaceChange(heapid, fExpand, size, noOfUCRs);
+			itor->second.OnHeapSpaceChange(heapid, fExpand, size, noOfUCRs, ss_committed);
 		}
 	}
 

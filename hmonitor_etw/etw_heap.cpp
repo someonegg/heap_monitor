@@ -158,7 +158,7 @@ public:
 		pThis->stackS(siCreate.stackid, siCreate.depth, siCreate.frames);
 		getTrackSystem()->OnHeapCreate(pThis->timeStampS(), pid, m_heapHandle, siCreate);
 		getTrackSystem()->OnHeapSpaceChange(pid, m_heapHandle,
-			true, m_committedSpace, 0);
+			true, m_committedSpace, 0, m_committedSpace);
 	}
 
 public:
@@ -252,6 +252,7 @@ class CE_Heap_ExpandContract : public IEvent
 	bool m_fExpand;
 	uint64_t m_changeSize;
 	uint32_t m_noOfUCRs;
+	uint64_t m_committedSpace;
 
 public:
 	void consume()
@@ -260,7 +261,7 @@ public:
 		uint32_t pid = pThis->pidS();
 
 		getTrackSystem()->OnHeapSpaceChange(pid, m_heapHandle,
-			m_fExpand, m_changeSize, m_noOfUCRs);
+			m_fExpand, m_changeSize, m_noOfUCRs, m_committedSpace);
 	}
 
 public:
@@ -279,6 +280,7 @@ public:
 			m_heapHandle = raw.HeapHandle;
 			m_changeSize = raw.Size;
 			m_noOfUCRs = raw.NoOfUCRs;
+			m_committedSpace = raw.CommittedSpace;
 		}
 		else
 		{
@@ -292,6 +294,7 @@ public:
 			m_heapHandle = raw.HeapHandle;
 			m_changeSize = raw.Size;
 			m_noOfUCRs = raw.NoOfUCRs;
+			m_committedSpace = raw.CommittedSpace;
 		}
 		return CREATE_SUCCESS;
 	}

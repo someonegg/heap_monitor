@@ -107,6 +107,7 @@ public:
 		, stackCreate()
 		, committed()
 		, noOfUCRs()
+		, ss_committed()
 	{
 	}
 
@@ -119,6 +120,7 @@ public:
 	const IRA_SymS* stackCreate;
 	tst_ptdiffer committed;
 	unsigned noOfUCRs;
+	tst_ptdiffer ss_committed;
 };
 
 class TSS_Thread : public StatBase<ThreadStat>

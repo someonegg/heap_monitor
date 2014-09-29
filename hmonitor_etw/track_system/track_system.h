@@ -76,7 +76,8 @@ struct ITrackSystem
 		tst_heapid heapid,
 		bool fExpand,
 		tst_ptdiffer size,
-		unsigned noOfUCRs
+		unsigned noOfUCRs,
+		tst_ptdiffer ss_committed
 		) = 0;
 
 	virtual void OnThreadStart(

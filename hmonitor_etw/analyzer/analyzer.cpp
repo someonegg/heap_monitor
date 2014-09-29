@@ -342,11 +342,12 @@ void TSSAnalyzer::showHeapList(
 		{
 			myPrintf("Heap Space info:\n");
 
-			const AllocBytes &ab = h.StatBy<AllocBytesIdx>();
-			double percent = (double)ab.current / (double)h.committed;
+			tst_ptdiffer current = h.StatBy<AllocBytesIdx>().current;
+			tst_ptdiffer committed = max(h.committed, h.ss_committed);
+			double percent = (double)current / (double)committed;
 			myPrintf("  [%.3f, %*llu, %*llu]  [%u]", percent,
-				m_wthAllocStat[4] + 0, ab.current,
-				m_wthAllocStat[4] + 1, h.committed,
+				m_wthAllocStat[4] + 0, current,
+				m_wthAllocStat[4] + 1, committed,
 				h.noOfUCRs);
 			myPrintf("\n");
 		}
