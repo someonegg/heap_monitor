@@ -291,7 +291,12 @@ public:
 			if (fExpand)
 				heap.committed += size;
 			else
-				heap.committed -= size;
+			{
+				if (heap.committed > size)
+					heap.committed -= size;
+				else
+					heap.committed = 4096; // minimum
+			}
 			heap.noOfUCRs = noOfUCRs;
 			heap.ss_committed = ss_committed;
 		}
