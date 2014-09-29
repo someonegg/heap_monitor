@@ -276,6 +276,24 @@ public:
 			m_heaps.erase(itor);
 		}
 	}
+	void OnHeapSpaceChange(
+		tst_heapid heapid,
+		bool fExpand,
+		tst_ptdiffer size,
+		unsigned noOfUCRs
+		)
+	{
+		HeapMap::iterator itor = m_heaps.find(heapid);
+		if (itor != m_heaps.end())
+		{
+			CHeap &heap = itor->second;
+			if (fExpand)
+				heap.committed += size;
+			else
+				heap.committed -= size;
+			heap.noOfUCRs = noOfUCRs;
+		}
+	}
 
 	void OnThreadStart(
 		tst_time tsStart,
@@ -291,6 +309,7 @@ public:
 		}
 
 		CThread &thread = m_threads[tid];
+		IRA iraEntry = addr2IRA(entry);
 		thread.tsStart = tsStart;
 		thread.id  = tid;
 		thread.userStack = userStack;
@@ -394,7 +413,7 @@ public:
 		if (itor != m_allocItems.end())
 		{
 			tsAlloc = itor->second.tsAlloc;
-			ASSERT (heapid == itor->second.heapid);
+			ASSERT (heapid = itor->second.heapid);
 			size = itor->second.size;
 			tid = itor->second.tid;
 			s = itor->second.cacheStackAlloc;
@@ -403,6 +422,7 @@ public:
 		else
 		{
 			// Log
+			// printf("%x ", addr);
 		}
 
 		// Stat
@@ -670,6 +690,20 @@ public:
 		if (itor != m_processes.end())
 		{
 			itor->second.OnHeapDestroy(tsDestroy, heapid);
+		}
+	}
+	void OnHeapSpaceChange(
+		tst_pid pid,
+		tst_heapid heapid,
+		bool fExpand,
+		tst_ptdiffer size,
+		unsigned noOfUCRs
+		)
+	{
+		ProcessMap::iterator itor = m_processes.find(pid);
+		if (itor != m_processes.end())
+		{
+			itor->second.OnHeapSpaceChange(heapid, fExpand, size, noOfUCRs);
 		}
 	}
 

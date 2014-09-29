@@ -373,32 +373,119 @@ void heapUntraceEXE(const char* name)
 }
 
 
+// LOG
+
+static HANDLE g_logFile = INVALID_HANDLE_VALUE;
+
+int myPrintfToLog(const char* format, ...)
+{
+	if (g_logFile == INVALID_HANDLE_VALUE)
+		return 1;
+
+	va_list arglist;
+	va_start(arglist, format);
+
+	char buffer[2048];
+	int len = _vsnprintf_s(buffer, 2048, _TRUNCATE, format, arglist);
+	if (len <= 0)
+		return 0;
+
+	DWORD cbWritten;
+	WriteFile(g_logFile, buffer, len, &cbWritten, NULL);
+	return 1;
+}
+
+int myPrintf(const char* format, ...)
+{
+	va_list arglist;
+	va_start(arglist, format);
+
+	char buffer[2048];
+	int len = _vsnprintf_s(buffer, 2048, _TRUNCATE, format, arglist);
+	if (len <= 0)
+		return 0;
+
+	printf(buffer);
+
+	if (g_logFile != INVALID_HANDLE_VALUE)
+	{
+		DWORD cbWritten;
+		WriteFile(g_logFile, buffer, len, &cbWritten, NULL);
+	}
+
+	return 1;
+}
+
+static void TurnOffLogFile()
+{
+	if (g_logFile != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(g_logFile);
+		g_logFile = INVALID_HANDLE_VALUE;
+	}
+}
+
+void cmdLogFile(int argc, wchar_t** argv)
+{
+	TurnOffLogFile();
+
+	const wchar_t* fileName = L"HeapMonitorTrace.log";
+	if (argc >= 1)
+	{
+		// turn off
+		if (_wcsicmp(argv[0], L"off") == 0)
+		{
+			wprintf(L"LogFile is turned off\n");
+			return;
+		}
+		else
+		{
+			fileName = argv[0];
+		}
+	}
+
+	g_logFile = CreateFileW(fileName, GENERIC_WRITE, FILE_SHARE_READ, NULL,
+		OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (g_logFile == INVALID_HANDLE_VALUE) {
+		wprintf(L"Cannot open LogFile %ls\n", fileName);
+		return;
+	}
+
+	SetFilePointer(g_logFile, 0, NULL, FILE_END);
+
+	wchar_t fullName[MAX_PATH] = { 0 };
+	wchar_t *pszFilePart = NULL;
+	GetFullPathNameW(fileName, MAX_PATH, fullName, &pszFilePart);
+	wprintf(L"LogFile is turned on, File=%ls\n", fullName);
+}
+
+
 void cmdStatus()
 {
 	HeapMonitor::STATUS status;
 	g_heapMonitor.Status(status);
 
-	printf("%llu : %llu : %llu : %llu\n",
+	myPrintf("%llu : %llu : %llu : %llu\n",
 		status.processTimes, status.processed, status.spendTime,
 		status.processed / (status.spendTime ? status.spendTime : 1) );
-	printf("%llu : %llu : %llu : %llu : %llu\n",
+	myPrintf("%llu : %llu : %llu : %llu : %llu\n",
 		status.ks.total, status.ks.success, status.ks.parseFailed,
 		status.ks.maxDur, status.ks.versionIgnore);
-	printf("%llu : %llu : %llu : %llu : %llu\n",
+	myPrintf("%llu : %llu : %llu : %llu : %llu\n",
 		status.hs.total, status.hs.success, status.hs.parseFailed,
 		status.hs.maxDur, status.hs.versionIgnore);
 }
 
 void cmdSnapshot(TSSAnalyzer &analyzer)
 {
-	printf("Capture snapshot for now. Wait ...\n");
+	myPrintf("Capture snapshot for now. Wait ...\n");
 	int64_t nowTS = g_QPCHelper.GetQPCNow();
 	while(nowTS > g_heapMonitor.LastTS())
 	{
 		Sleep(200);
 	}
 	analyzer.UpdateSnapshot();
-	printf("OK!\n");
+	myPrintf("OK!\n");
 }
 
 void cmdUse(TSSAnalyzer &analyzer, int argc, wchar_t** argv)
@@ -408,13 +495,13 @@ void cmdUse(TSSAnalyzer &analyzer, int argc, wchar_t** argv)
 		tst_pid pid = _wtoi(argv[1]);
 		bool fSuccess = analyzer.SetTargetProcess(pid);
 		if (fSuccess)
-			printf("Switch to process %u\n", pid);
+			myPrintf("Switch to process %u\n", pid);
 		else
-			printf("Unknown process\n");
+			myPrintf("Unknown process\n");
 	}
 	else
 	{
-		printf("Current process is %u\n", analyzer.TargetProcess());
+		myPrintf("Current process is %u\n", analyzer.TargetProcess());
 	}
 }
 
@@ -425,22 +512,24 @@ void userCmdLoop()
 
 	bool fAutoMode = true, lastAutoMode = false;
 
-	const size_t USERCMD_MAX = 50;
+	const size_t USERCMD_MAX = 128;
 	char cmd[USERCMD_MAX + 1] = { 0 };
 	char lastCmd[USERCMD_MAX + 1] = { 0 };
 	do
 	{
 		if (lastAutoMode != fAutoMode)
 		{
-			printf(fAutoMode ? "Auto mode ON\n" : "Auto mode OFF\n");
+			myPrintf(fAutoMode ? "Auto mode ON\n" : "Auto mode OFF\n");
 			lastAutoMode = fAutoMode;
 		}
-		printf(">");
+		myPrintf(">");
 		memset(cmd, 0, sizeof(cmd));
 		fgets(cmd, USERCMD_MAX, stdin);
 
 		char *newline = strchr(cmd, '\n');
 		if (newline) *newline = 0;
+
+		myPrintfToLog("%s\n", cmd);
 
 		if (cmd[0] == 0)
 			memcpy(cmd, lastCmd, USERCMD_MAX);
@@ -464,6 +553,10 @@ void userCmdLoop()
 			_wcsicmp(argv[0], L"cls") == 0)
 		{
 			system("cls");
+		}
+		else if (_wcsicmp(argv[0], L"logfile") == 0)
+		{
+			cmdLogFile(argc - 1, argv + 1);
 		}
 		else if (_wcsicmp(argv[0], L"status") == 0)
 		{
@@ -494,10 +587,10 @@ void userCmdLoop()
 			bool fKnown = analyzer.Command(argc, argv);
 
 			if (!fKnown)
-				printf("Unknown command\n");
+				myPrintf("Unknown command\n");
 		}
 
-		printf("\n");
+		myPrintf("\n");
 
 		LocalFree(argv);
 		memcpy(lastCmd, cmd, USERCMD_MAX);
@@ -538,6 +631,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	heapUntraceEXE(imageName.c_str());
 
 	g_heapMonitor.Stop();
+
+	TurnOffLogFile();
 
 #if NDEBUG
 	_exit(0);

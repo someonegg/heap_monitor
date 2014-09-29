@@ -71,6 +71,13 @@ struct ITrackSystem
 		tst_pid pid,
 		tst_heapid heapid
 		) = 0;
+	virtual void OnHeapSpaceChange(
+		tst_pid pid,
+		tst_heapid heapid,
+		bool fExpand,
+		tst_ptdiffer size,
+		unsigned noOfUCRs
+		) = 0;
 
 	virtual void OnThreadStart(
 		tst_time tsStart,

@@ -13,6 +13,8 @@ DEFINE_GUID ( /* 222962ab-6180-4b88-a825-346b75f2a24a */
 
 #define TRACETYPE_HEAP_CREATE     0x20
 #define TRACETYPE_HEAP_DESTROY    0x23
+#define TRACETYPE_HEAP_EXPAND     0x25
+#define TRACETYPE_HEAP_CONTRACT   0x2a
 #define TRACETYPE_HEAP_ALLOC      0x21
 #define TRACETYPE_HEAP_REALLOC    0x22
 #define TRACETYPE_HEAP_FREE       0x24
@@ -49,6 +51,32 @@ struct HeapDestroy_Event_32
 struct HeapDestroy_Event_64
 {
 	uint64_t HeapHandle;
+};
+
+// Version 3 : From Win7 ?
+struct HeapExpandContract_Event_32
+{
+	uint32_t HeapHandle;
+	uint32_t Size;    // CommittedSize or DeCommittedSize
+	uint32_t Address; // CommitAddress or DeCommitAddress
+	uint32_t FreeSpace;
+	uint32_t CommittedSpace;
+	uint32_t ReservedSpace;
+	uint32_t NoOfUCRs;
+	uint32_t AllocatedSpace;
+};
+
+// Version 3 : From Win7 ?
+struct HeapExpandContract_Event_64
+{
+	uint64_t HeapHandle;
+	uint64_t Size;    // CommittedSize or DeCommittedSize
+	uint64_t Address; // CommitAddress or DeCommitAddress
+	uint64_t FreeSpace;
+	uint64_t CommittedSpace;
+	uint64_t ReservedSpace;
+	uint32_t NoOfUCRs;
+	uint64_t AllocatedSpace;
 };
 
 // Version 2 : From Win7 ?
@@ -129,6 +157,8 @@ public:
 		STACKINFO siCreate = {0};
 		pThis->stackS(siCreate.stackid, siCreate.depth, siCreate.frames);
 		getTrackSystem()->OnHeapCreate(pThis->timeStampS(), pid, m_heapHandle, siCreate);
+		getTrackSystem()->OnHeapSpaceChange(pid, m_heapHandle,
+			true, m_committedSpace, 0);
 	}
 
 public:
@@ -208,6 +238,60 @@ public:
 			etLen  -= sizeof(raw);
 
 			m_heapHandle = raw.HeapHandle;
+		}
+		return CREATE_SUCCESS;
+	}
+};
+
+template <template<class _Evt> class _Impl>
+class CE_Heap_ExpandContract : public IEvent
+{
+	typedef _Impl<CE_Heap_ExpandContract> _This;
+
+	uint64_t m_heapHandle;
+	bool m_fExpand;
+	uint64_t m_changeSize;
+	uint32_t m_noOfUCRs;
+
+public:
+	void consume()
+	{
+		_This* pThis = static_cast<_This*>(this);
+		uint32_t pid = pThis->pidS();
+
+		getTrackSystem()->OnHeapSpaceChange(pid, m_heapHandle,
+			m_fExpand, m_changeSize, m_noOfUCRs);
+	}
+
+public:
+	int InitBase(bool f64, bool fExpand, char* &etData, size_t &etLen)
+	{
+		m_fExpand = fExpand;
+		if (f64)
+		{
+			HeapExpandContract_Event_64 raw = {0};
+			if (etLen < sizeof(raw))
+				return CREATE_PARSE_FAILED;
+			memcpy(&raw, etData, sizeof(raw));
+			etData += sizeof(raw);
+			etLen  -= sizeof(raw);
+
+			m_heapHandle = raw.HeapHandle;
+			m_changeSize = raw.Size;
+			m_noOfUCRs = raw.NoOfUCRs;
+		}
+		else
+		{
+			HeapExpandContract_Event_32 raw = {0};
+			if (etLen < sizeof(raw))
+				return CREATE_PARSE_FAILED;
+			memcpy(&raw, etData, sizeof(raw));
+			etData += sizeof(raw);
+			etLen  -= sizeof(raw);
+
+			m_heapHandle = raw.HeapHandle;
+			m_changeSize = raw.Size;
+			m_noOfUCRs = raw.NoOfUCRs;
 		}
 		return CREATE_SUCCESS;
 	}
@@ -335,6 +419,11 @@ public:
 			m_oldAllocSize = raw.OldAllocSize;
 			m_sourceId = raw.SourceId;
 		}
+		if (m_newAllocAddress != m_oldAllocAddress)
+		{
+			// have received: HeapAlloc + HeapFree
+			return CREATE_IGNORE_EVENT;
+		}
 		return CREATE_SUCCESS;
 	}
 };
@@ -442,6 +531,28 @@ public:
 
 				int ret;
 				if ((ret = evt->InitBase(f64, etData, etLen)) != CREATE_SUCCESS)
+				{
+					evt->destroyS();
+					return ret;
+				}
+
+				receiver->newEvent(evt);
+				return CREATE_SUCCESS;
+			}
+
+			return CREATE_IGNORE_VERSION;
+
+		case TRACETYPE_HEAP_EXPAND:
+		case TRACETYPE_HEAP_CONTRACT:
+			if (etVer == 3)
+			{
+				CEventImpl<CE_Heap_ExpandContract<CEventImpl> >* evt =
+					new CEventImpl<CE_Heap_ExpandContract<CEventImpl> >;
+				evt->initS(etTS, etPid, etTid);
+
+				int ret;
+				bool fExpand = (etType == TRACETYPE_HEAP_EXPAND);
+				if ((ret = evt->InitBase(f64, fExpand, etData, etLen)) != CREATE_SUCCESS)
 				{
 					evt->destroyS();
 					return ret;

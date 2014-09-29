@@ -22,6 +22,8 @@ const char* TMPL_STACKCONDITION =
 	"\treturn (%s)\n"
 	"end\n";
 
+int myPrintf(const char* format, ...);
+
 
 TSSAnalyzer::TSSAnalyzer()
 	: m_limitTop(6)
@@ -130,7 +132,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 
 	if (m_process == NULL)
 	{
-		printf("Unknown process\n");
+		myPrintf("Unknown process\n");
 		return true;
 	}
 
@@ -205,7 +207,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 
 void TSSAnalyzer::showSnapshotInfo()
 {
-	printf("[Snapshot, %d seconds ago]\n",
+	myPrintf("[Snapshot, %d seconds ago]\n",
 		(int)g_QPCHelper.GetTimeSpentMS(m_sys.tsLast) / 1000);
 }
 
@@ -216,11 +218,11 @@ void TSSAnalyzer::showSortInfo(size_t total)
 		"CountTotal", "CountCurrent", "CountPeak",
 		"BytesTotal", "BytesCurrent", "BytesPeak"
 	};
-	printf("[");
-	printf("Show top %u, sort by %s", total, szST[m_sortType]);
+	myPrintf("[");
+	myPrintf("Show top %u, sort by %s", total, szST[m_sortType]);
 	if (m_hasCondition)
-		printf(", use condition");
-	printf("]\n");
+		myPrintf(", use condition");
+	myPrintf("]\n");
 }
 
 void TSSAnalyzer::showProcessList(
@@ -235,17 +237,17 @@ void TSSAnalyzer::showProcessList(
 	sortSetByLimit(pl, ss, m_limitTop, m_sortType);
 
 	showSortInfo(ss.size());
-	printf("\n");
+	myPrintf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
 		const TSS_Process &p = *(ss[i]);
 
-		printf("%-*u  %*s  ",
+		myPrintf("%-*u  %*s  ",
 			m_wthPid, p.id, m_wthPname, p.name.c_str());
 		printAllocStat(p, m_wthAllocStat, "  ");
-		printf("\n");
-		printf("\n");
+		myPrintf("\n");
+		myPrintf("\n");
 	}
 }
 
@@ -261,23 +263,23 @@ void TSSAnalyzer::showStackList(
 	sortSetByLimit(sl, ss, m_limitTop, m_sortType);
 
 	showSortInfo(ss.size());
-	printf("\n");
+	myPrintf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
 		const TSS_Stack &s = *(ss[i]);
 
-		printf("0x%-*llx  ", m_wthStackid, s.id);
+		myPrintf("0x%-*llx  ", m_wthStackid, s.id);
 		printAllocStat(s, m_wthAllocStat, "  ");
-		printf("\n");
+		myPrintf("\n");
 
 		if (fExt)
 		{
-			printf("Stack info:\n");
+			myPrintf("Stack info:\n");
 			printIRAS(*(s.ira_syms));
 		}
 
-		printf("\n");
+		myPrintf("\n");
 	}
 }
 
@@ -293,25 +295,25 @@ void TSSAnalyzer::showImageList(
 	sortSetByLimit(il, ss, m_limitTop, m_sortType);
 
 	showSortInfo(ss.size());
-	printf("\n");
+	myPrintf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
 		const TSS_Image &img = *(ss[i]);
 
-		printf("%s\n", m_sys.nimImg.name(img.index));
+		myPrintf("%s\n", m_sys.nimImg.name(img.index));
 
-		printf("0x%-*llx  ", m_wthImgid, img.id);
+		myPrintf("0x%-*llx  ", m_wthImgid, img.id);
 		printAllocStat(img, m_wthAllocStat, "  ");
-		printf("\n");
+		myPrintf("\n");
 
 		if (fExt)
 		{
-			printf("ImageLoad Stack info:\n");
+			myPrintf("ImageLoad Stack info:\n");
 			printIRAS(*(img.stackLoad));
 		}
 
-		printf("\n");
+		myPrintf("\n");
 	}
 }
 
@@ -327,23 +329,35 @@ void TSSAnalyzer::showHeapList(
 	sortSetByLimit(hl, ss, m_limitTop, m_sortType);
 
 	showSortInfo(ss.size());
-	printf("\n");
+	myPrintf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
 		const TSS_Heap &h = *(ss[i]);
 
-		printf("0x%-*llx  ", m_wthHeapid, h.id);
+		myPrintf("0x%-*llx  ", m_wthHeapid, h.id);
 		printAllocStat(h, m_wthAllocStat, "  ");
-		printf("\n");
+		myPrintf("\n");
+
+		{
+			myPrintf("Heap Space info:\n");
+
+			const AllocBytes &ab = h.StatBy<AllocBytesIdx>();
+			double percent = (double)ab.current / (double)h.committed;
+			myPrintf("  [%.3f, %*llu, %*llu]  [%u]", percent,
+				m_wthAllocStat[4] + 0, ab.current,
+				m_wthAllocStat[4] + 1, h.committed,
+				h.noOfUCRs);
+			myPrintf("\n");
+		}
 
 		if (fExt)
 		{
-			printf("HeapCreate Stack info:\n");
+			myPrintf("HeapCreate Stack info:\n");
 			printIRAS(*(h.stackCreate));
 		}
 
-		printf("\n");
+		myPrintf("\n");
 	}
 }
 
@@ -359,26 +373,26 @@ void TSSAnalyzer::showThreadList(
 	sortSetByLimit(tl, ss, m_limitTop, m_sortType);
 
 	showSortInfo(ss.size());
-	printf("\n");
+	myPrintf("\n");
 
 	for (size_t i = 0; i < ss.size(); ++i)
 	{
 		const TSS_Thread &t = *(ss[i]);
 
-		printf("%-*u  ", m_wthTid, t.id);
+		myPrintf("%-*u  ", m_wthTid, t.id);
 		printAllocStat(t, m_wthAllocStat, "  ");
-		printf("\n");
+		myPrintf("\n");
 
 		printIRA(t.entry);
-		printf("\n");
+		myPrintf("\n");
 
 		if (fExt)
 		{
-			printf("CreateThread Stack info:\n");
+			myPrintf("CreateThread Stack info:\n");
 			printIRAS(*(t.stackStart));
 		}
 
-		printf("\n");
+		myPrintf("\n");
 	}
 }
 
@@ -561,7 +575,7 @@ void TSSAnalyzer::printAllocStat(
 {
 	const AllocCount &ac = t.StatBy<AllocCountIdx>();
 	const AllocBytes &ab = t.StatBy<AllocBytesIdx>();
-	printf(
+	myPrintf(
 		"(%*llu, %*llu, %*llu)%s(%*llu, %*llu, %*llu)",
 		wthAllocStat[0], ac.total,
 		wthAllocStat[1], ac.current,
@@ -577,7 +591,7 @@ void TSSAnalyzer::printIRA(const IRA_Sym &ira_sym)
 {
 	if (!ira_sym.sym.empty())
 	{
-		printf("%s", ira_sym.sym.c_str());
+		myPrintf("%s", ira_sym.sym.c_str());
 		return;
 	}
 
@@ -602,7 +616,7 @@ void TSSAnalyzer::printIRA(const IRA_Sym &ira_sym)
 		ira_sym.sym = funInfo;
 	}
 
-	printf("%s", ira_sym.sym.c_str());
+	myPrintf("%s", ira_sym.sym.c_str());
 	return;
 }
 
@@ -615,9 +629,9 @@ void TSSAnalyzer::printIRAS(
 	for (IRA_SymS::const_iterator itor = ira_syms.begin();
 		itor != ira_syms.end(); ++itor)
 	{
-		printf("%s", prefix);
+		myPrintf("%s", prefix);
 		printIRA(*itor);
-		printf("%s", postfix);
+		myPrintf("%s", postfix);
 	}
 }
 
@@ -634,11 +648,29 @@ bool TSSAnalyzer::renderScript(const char* scriptTmpl, const char* param)
 	return false;
 }
 
+class LuaStackBalancer
+{
+	lua_State* m_L;
+	int m_top;
+public:
+	LuaStackBalancer(lua_State* L)
+	{
+		m_L = L;
+		m_top = lua_gettop(m_L);
+	}
+	~LuaStackBalancer()
+	{
+		lua_settop(m_L, m_top);
+	}
+};
+
 template <class T>
 bool TSSAnalyzer::fitCondition(const T &t)
 {
 	const AllocCount &ac = t.StatBy<AllocCountIdx>();
 	const AllocBytes &ab = t.StatBy<AllocBytesIdx>();
+
+	LuaStackBalancer _balancer(m_L);
 
 	lua_getglobal(m_L, "NormalCondition");
 	if (!lua_isfunction(m_L, -1))
@@ -646,12 +678,12 @@ bool TSSAnalyzer::fitCondition(const T &t)
 		return true;
 	}
 
-	lua_pushinteger(m_L, ac.total);
-	lua_pushinteger(m_L, ac.current);
-	lua_pushinteger(m_L, ac.peak);
-	lua_pushinteger(m_L, ab.total);
-	lua_pushinteger(m_L, ab.current);
-	lua_pushinteger(m_L, ab.peak);
+	lua_pushnumber(m_L, (lua_Number)ac.total);
+	lua_pushnumber(m_L, (lua_Number)ac.current);
+	lua_pushnumber(m_L, (lua_Number)ac.peak);
+	lua_pushnumber(m_L, (lua_Number)ab.total);
+	lua_pushnumber(m_L, (lua_Number)ab.current);
+	lua_pushnumber(m_L, (lua_Number)ab.peak);
 
 	if (lua_pcall(m_L, 6, 1, 0) != 0)
 	{
@@ -671,20 +703,22 @@ bool TSSAnalyzer::fitCondition(const TSS_Stack &t)
 	const AllocCount &ac = t.StatBy<AllocCountIdx>();
 	const AllocBytes &ab = t.StatBy<AllocBytesIdx>();
 
+	LuaStackBalancer _balancer(m_L);
+
 	lua_getglobal(m_L, "StackCondition");
 	if (!lua_isfunction(m_L, -1))
 	{
 		return true;
 	}
 
-	lua_pushinteger(m_L, ac.total);
-	lua_pushinteger(m_L, ac.current);
-	lua_pushinteger(m_L, ac.peak);
-	lua_pushinteger(m_L, ab.total);
-	lua_pushinteger(m_L, ab.current);
-	lua_pushinteger(m_L, ab.peak);
-	lua_pushinteger(m_L, t.imgid);
-	lua_pushinteger(m_L, t.heapid);
+	lua_pushnumber(m_L, (lua_Number)ac.total);
+	lua_pushnumber(m_L, (lua_Number)ac.current);
+	lua_pushnumber(m_L, (lua_Number)ac.peak);
+	lua_pushnumber(m_L, (lua_Number)ab.total);
+	lua_pushnumber(m_L, (lua_Number)ab.current);
+	lua_pushnumber(m_L, (lua_Number)ab.peak);
+	lua_pushnumber(m_L, (lua_Number)t.imgid);
+	lua_pushnumber(m_L, (lua_Number)t.heapid);
 
 	if (lua_pcall(m_L, 8, 1, 0) != 0)
 	{

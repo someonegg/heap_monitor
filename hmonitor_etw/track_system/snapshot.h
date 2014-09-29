@@ -105,6 +105,8 @@ public:
 		, tsDestroy()
 		, id()
 		, stackCreate()
+		, committed()
+		, noOfUCRs()
 	{
 	}
 
@@ -115,6 +117,8 @@ public:
 	tst_time tsDestroy;
 	ID id;
 	const IRA_SymS* stackCreate;
+	tst_ptdiffer committed;
+	unsigned noOfUCRs;
 };
 
 class TSS_Thread : public StatBase<ThreadStat>
