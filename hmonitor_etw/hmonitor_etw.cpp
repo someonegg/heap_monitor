@@ -140,7 +140,7 @@ public:
 		int64_t staleTime;
 		{
 			int64_t k = m_kernelSession.LastTS();
-			int64_t h = m_kernelSession.LastTS();
+			int64_t h = m_heapSession.LastTS();
 			staleTime = max(k, h);
 			staleTime = g_QPCHelper.GetQPCFrom(staleTime, -SESSION_CACHE_TIME_MS);
 		}
