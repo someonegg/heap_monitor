@@ -13,6 +13,7 @@
 #include "statistics.h"
 #include <vector>
 #include <string>
+#include <utility>
 #include "jtwsm/nameidx_map.h"
 
 
@@ -99,6 +100,8 @@ class TSS_Heap : public StatBase<HeapStat>
 public:
 	typedef TSS_Heap MyT;
 	typedef tst_heapid ID;
+	typedef std::pair<tst_pointer, tst_pointer> Range;
+	typedef std::vector<Range> Ranges;
 
 	TSS_Heap()
 		: tsCreate()
@@ -106,8 +109,6 @@ public:
 		, id()
 		, stackCreate()
 		, committed()
-		, noOfUCRs()
-		, ss_committed()
 	{
 	}
 
@@ -119,8 +120,7 @@ public:
 	ID id;
 	const IRA_SymS* stackCreate;
 	tst_ptdiffer committed;
-	unsigned noOfUCRs;
-	tst_ptdiffer ss_committed;
+	Ranges ranges;
 };
 
 class TSS_Thread : public StatBase<ThreadStat>

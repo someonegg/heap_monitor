@@ -488,6 +488,21 @@ void cmdSnapshot(TSSAnalyzer &analyzer)
 	myPrintf("OK!\n");
 }
 
+void cmdCheck(int argc, wchar_t** argv)
+{
+	if (argc >= 1)
+	{
+		if (_wcsicmp(argv[0], L"heap") == 0 &&
+			argc > 1)
+		{
+			tst_heapid hid = (tst_heapid)
+				_wcstoui64(argv[1], NULL, 16);
+			getTrackSystem()->CheckHeap(hid);
+			return;
+		}
+	}
+}
+
 void cmdUse(TSSAnalyzer &analyzer, int argc, wchar_t** argv)
 {
 	if (argc > 1)
@@ -574,6 +589,10 @@ void userCmdLoop()
 		{
 			cmdSnapshot(analyzer);
 			fAutoMode = false;
+		}
+		else if (_wcsicmp(argv[0], L"check") == 0)
+		{
+			cmdCheck(argc - 1, argv + 1);
 		}
 		else if (_wcsicmp(argv[0], L"use") == 0)
 		{

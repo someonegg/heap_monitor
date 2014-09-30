@@ -2,6 +2,7 @@
 #include "config.h"
 #include "snapshot.h"
 #include "track_system.h"
+#include "jtwsm/range.h"
 #include "utility/lock_helper.h"
 
 
@@ -32,9 +33,53 @@ struct ImageBaseCmp
 	}
 };
 
-typedef TSS_Heap CHeap;
-
 typedef TSS_Thread CThread;
+
+
+class CHeap : public StatBase<HeapStat>
+{
+public:
+	CHeap()
+		: tsCreate()
+		, tsDestroy()
+		, id()
+		, stackCreate()
+	{
+	}
+
+	void Snapshot(TSS_Heap &h) const
+	{
+		size_t i = 0;
+		(StatBase<HeapStat>&)h = *this;
+
+		h.tsCreate = tsCreate;
+		h.tsDestroy = tsDestroy;
+		h.id = id;
+		h.stackCreate = stackCreate;
+
+		h.committed = 0;
+		const Ranges &ranges = rangem.ranges;
+		h.ranges.resize(ranges.size());
+		i = 0;
+		for (Ranges::const_iterator itor = ranges.begin();
+			itor != ranges.end(); ++itor, ++i)
+		{
+			h.ranges[i].first = itor->first;
+			h.ranges[i].second = itor->second;
+			h.committed += itor->second - itor->first;
+		}
+	}
+
+	tst_time tsCreate;
+	tst_time tsDestroy;
+	tst_heapid id;
+	const IRA_SymS* stackCreate;
+
+	typedef jtwsm::RangeManager<tst_pointer> RangeM;
+	typedef RangeM::Range Range;
+	typedef RangeM::Ranges Ranges;
+	RangeM rangem;
+};
 
 
 class CProcess : public StatBase<ProcessStat>
@@ -279,26 +324,32 @@ public:
 	void OnHeapSpaceChange(
 		tst_heapid heapid,
 		bool fExpand,
-		tst_ptdiffer size,
-		unsigned noOfUCRs,
-		tst_ptdiffer ss_committed
+		tst_pointer addr,
+		tst_ptdiffer size
 		)
 	{
+		if (addr == 0 || size == 0)
+		{
+			// printf("%x %x,", addr, size);
+			return;
+		}
 		HeapMap::iterator itor = m_heaps.find(heapid);
 		if (itor != m_heaps.end())
 		{
 			CHeap &heap = itor->second;
 			if (fExpand)
-				heap.committed += size;
+			{
+				// printf("c,%x,%x ", addr, size);
+				tst_pointer beg = addr - addr % HEAP_PAGESIZE;
+				tst_pointer lst = addr + size - 1;
+				tst_pointer end = lst - lst % HEAP_PAGESIZE + HEAP_PAGESIZE;
+				heap.rangem.add(beg, end);
+			}
 			else
 			{
-				if (heap.committed > size)
-					heap.committed -= size;
-				else
-					heap.committed = 4096; // minimum
+				// printf("u,%x,%x ", addr, size);
+				heap.rangem.del(addr, addr + size);
 			}
-			heap.noOfUCRs = noOfUCRs;
-			heap.ss_committed = ss_committed;
 		}
 	}
 
@@ -469,6 +520,7 @@ public:
 public:
 	void Snapshot(TSS_Process &p) const
 	{
+		size_t i = 0;
 		(StatBase<ProcessStat>&)p = *this;
 
 		p.tsStart = m_tsStart;
@@ -494,12 +546,12 @@ public:
 			p.images.push_back(itor->second);
 		}
 
-		p.heaps.clear();
-		p.heaps.reserve(m_heaps.size());
+		p.heaps.resize(m_heaps.size());
+		i = 0;
 		for (HeapMap::const_iterator itor = m_heaps.begin();
-			itor != m_heaps.end(); ++itor)
+			itor != m_heaps.end(); ++itor, ++i)
 		{
-			p.heaps.push_back(itor->second);
+			itor->second.Snapshot(p.heaps[i]);
 		}
 
 		p.threads.clear();
@@ -509,6 +561,34 @@ public:
 		{
 			p.threads.push_back(itor->second);
 		}
+	}
+
+	void CheckHeap(tst_heapid heapid)
+	{
+		CHeap* h = heap(heapid);
+		if (h == NULL)
+		{
+			return;
+		}
+
+		uint64_t count = 0, bytes = 0;
+		for (AllocItemMap::const_iterator itor = m_allocItems.begin();
+			itor != m_allocItems.end(); ++itor)
+		{
+			if (itor->second.heapid == heapid)
+			{
+				if (h->rangem.isin(itor->first))
+				{
+					count++;
+					bytes += itor->second.size;
+				}
+				else
+				{
+					printf("%x,%llu ", itor->first, itor->second.size);
+				}
+			}
+		}
+		printf("\n%llu, %llu\n", count, bytes);
 	}
 
 protected:
@@ -703,15 +783,14 @@ public:
 		tst_pid pid,
 		tst_heapid heapid,
 		bool fExpand,
-		tst_ptdiffer size,
-		unsigned noOfUCRs,
-		tst_ptdiffer ss_committed
+		tst_pointer addr,
+		tst_ptdiffer size
 		)
 	{
 		ProcessMap::iterator itor = m_processes.find(pid);
 		if (itor != m_processes.end())
 		{
-			itor->second.OnHeapSpaceChange(heapid, fExpand, size, noOfUCRs, ss_committed);
+			itor->second.OnHeapSpaceChange(heapid, fExpand, addr, size);
 		}
 	}
 
@@ -799,12 +878,13 @@ public:
 		TSS_System &sys
 		)
 	{
+		size_t i = 0;
 		AutoLock _alock(&m_lock);
 
 		sys.processes.resize(m_processes.size());
-
-		ProcessMap::const_iterator itor = m_processes.begin();
-		for (size_t i = 0; itor != m_processes.end(); ++itor, ++i)
+		i = 0;
+		for (ProcessMap::const_iterator itor = m_processes.begin();
+			itor != m_processes.end(); ++itor, ++i)
 		{
 			itor->second.Snapshot(sys.processes[i]);
 		}
@@ -812,6 +892,18 @@ public:
 		sys.nimImg = m_nimImg;
 
 		sys.tsLast = m_tsLast;
+	}
+
+	void CheckHeap(tst_heapid heapid)
+	{
+		size_t i = 0;
+		AutoLock _alock(&m_lock);
+
+		for (ProcessMap::iterator itor = m_processes.begin();
+			itor != m_processes.end(); ++itor, ++i)
+		{
+			itor->second.CheckHeap(heapid);
+		}
 	}
 
 	const IRA_SymS* newStack(

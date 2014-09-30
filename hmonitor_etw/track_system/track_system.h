@@ -75,9 +75,8 @@ struct ITrackSystem
 		tst_pid pid,
 		tst_heapid heapid,
 		bool fExpand,
-		tst_ptdiffer size,
-		unsigned noOfUCRs,
-		tst_ptdiffer ss_committed
+		tst_pointer addr,
+		tst_ptdiffer size
 		) = 0;
 
 	virtual void OnThreadStart(
@@ -127,6 +126,9 @@ struct ITrackSystem
 
 	virtual void Snapshot(
 		TSS_System &sys
+		) = 0;
+	virtual void CheckHeap(
+		tst_heapid heapid
 		) = 0;
 };
 

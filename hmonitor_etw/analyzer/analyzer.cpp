@@ -26,8 +26,8 @@ int myPrintf(const char* format, ...);
 
 
 TSSAnalyzer::TSSAnalyzer()
-	: m_limitTop(6)
-	, m_sortType(ST_CountTotal)
+	: m_limitTop(5)
+	, m_sortType(ST_BytesCurrent)
 	, m_hasCondition(false)
 	, m_wthPid()
 	, m_wthPname()
@@ -343,12 +343,13 @@ void TSSAnalyzer::showHeapList(
 			myPrintf("Heap Space info:\n");
 
 			tst_ptdiffer current = h.StatBy<AllocBytesIdx>().current;
-			tst_ptdiffer committed = max(h.committed, h.ss_committed);
+			tst_ptdiffer committed = h.committed; // max(h.committed, h.ss_committed);
 			double percent = (double)current / (double)committed;
-			myPrintf("  [%.3f, %*llu, %*llu]  [%u]", percent,
+			myPrintf("  [%.3f, %*llu, %*llu] [%u]",
+				percent,
 				m_wthAllocStat[4] + 0, current,
 				m_wthAllocStat[4] + 1, committed,
-				h.noOfUCRs);
+				(unsigned)h.ranges.size());
 			myPrintf("\n");
 		}
 

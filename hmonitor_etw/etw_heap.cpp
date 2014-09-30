@@ -156,9 +156,10 @@ public:
 
 		STACKINFO siCreate = {0};
 		pThis->stackS(siCreate.stackid, siCreate.depth, siCreate.frames);
-		getTrackSystem()->OnHeapCreate(pThis->timeStampS(), pid, m_heapHandle, siCreate);
+		getTrackSystem()->OnHeapCreate(pThis->timeStampS(), pid,
+			m_heapHandle, siCreate);
 		getTrackSystem()->OnHeapSpaceChange(pid, m_heapHandle,
-			true, m_committedSpace, 0, m_committedSpace);
+			true, m_heapHandle, m_committedSpace);
 	}
 
 public:
@@ -250,6 +251,7 @@ class CE_Heap_ExpandContract : public IEvent
 
 	uint64_t m_heapHandle;
 	bool m_fExpand;
+	uint64_t m_changeAddr;
 	uint64_t m_changeSize;
 	uint32_t m_noOfUCRs;
 	uint64_t m_committedSpace;
@@ -261,7 +263,7 @@ public:
 		uint32_t pid = pThis->pidS();
 
 		getTrackSystem()->OnHeapSpaceChange(pid, m_heapHandle,
-			m_fExpand, m_changeSize, m_noOfUCRs, m_committedSpace);
+			m_fExpand, m_changeAddr, m_changeSize);
 	}
 
 public:
@@ -278,6 +280,7 @@ public:
 			etLen  -= sizeof(raw);
 
 			m_heapHandle = raw.HeapHandle;
+			m_changeAddr = raw.Address;
 			m_changeSize = raw.Size;
 			m_noOfUCRs = raw.NoOfUCRs;
 			m_committedSpace = raw.CommittedSpace;
@@ -292,6 +295,7 @@ public:
 			etLen  -= sizeof(raw);
 
 			m_heapHandle = raw.HeapHandle;
+			m_changeAddr = raw.Address;
 			m_changeSize = raw.Size;
 			m_noOfUCRs = raw.NoOfUCRs;
 			m_committedSpace = raw.CommittedSpace;
