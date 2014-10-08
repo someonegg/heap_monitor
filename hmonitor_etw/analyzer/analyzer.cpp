@@ -28,6 +28,7 @@ int myPrintf(const char* format, ...);
 TSSAnalyzer::TSSAnalyzer()
 	: m_limitTop(5)
 	, m_sortType(ST_BytesCurrent)
+	, m_fDsc(true)
 	, m_hasCondition(false)
 	, m_wthPid()
 	, m_wthPname()
@@ -117,7 +118,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"pl") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showProcessList(m_sys.processes);
 		return true;
 	}
@@ -125,7 +126,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"ple") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showProcessList(m_sys.processes, true);
 		return true;
 	}
@@ -140,7 +141,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"sl") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_STACKCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_STACKCONDITION);
 		showStackList(m_process->stacks);
 		return true;
 	}
@@ -148,7 +149,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"sle") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_STACKCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_STACKCONDITION);
 		showStackList(m_process->stacks, true);
 		return true;
 	}
@@ -156,7 +157,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"il") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showImageList(m_process->images);
 		return true;
 	}
@@ -164,7 +165,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"ile") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showImageList(m_process->images, true);
 		return true;
 	}
@@ -172,7 +173,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"hl") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showHeapList(m_process->heaps);
 		return true;
 	}
@@ -180,7 +181,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"hle") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showHeapList(m_process->heaps, true);
 		return true;
 	}
@@ -188,7 +189,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"tl") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showThreadList(m_process->threads);
 		return true;
 	}
@@ -196,7 +197,7 @@ bool TSSAnalyzer::Command(int argc, wchar_t** argv)
 		_wcsicmp(argv[0], L"tle") == 0)
 	{
 		parseSortArgs(argc - 1, argv + 1,
-			m_limitTop, m_sortType, TMPL_NORMALCONDITION);
+			m_limitTop, m_sortType, m_fDsc, TMPL_NORMALCONDITION);
 		showThreadList(m_process->threads, true);
 		return true;
 	}
@@ -220,6 +221,7 @@ void TSSAnalyzer::showSortInfo(size_t total)
 	};
 	myPrintf("[");
 	myPrintf("Show top %u, sort by %s", total, szST[m_sortType]);
+	m_fDsc ? myPrintf(" (DSC)") : myPrintf(" (ASC)");
 	if (m_hasCondition)
 		myPrintf(", use condition");
 	myPrintf("]\n");
@@ -234,7 +236,7 @@ void TSSAnalyzer::showProcessList(
 		return;
 
 	std::vector<const TSS_Process*> ss;
-	sortSetByLimit(pl, ss, m_limitTop, m_sortType);
+	sortSetByLimit(pl, ss, m_limitTop, m_sortType, m_fDsc);
 
 	showSortInfo(ss.size());
 	myPrintf("\n");
@@ -260,7 +262,7 @@ void TSSAnalyzer::showStackList(
 		return;
 
 	std::vector<const TSS_Stack*> ss;
-	sortSetByLimit(sl, ss, m_limitTop, m_sortType);
+	sortSetByLimit(sl, ss, m_limitTop, m_sortType, m_fDsc);
 
 	showSortInfo(ss.size());
 	myPrintf("\n");
@@ -292,7 +294,7 @@ void TSSAnalyzer::showImageList(
 		return;
 
 	std::vector<const TSS_Image*> ss;
-	sortSetByLimit(il, ss, m_limitTop, m_sortType);
+	sortSetByLimit(il, ss, m_limitTop, m_sortType, m_fDsc);
 
 	showSortInfo(ss.size());
 	myPrintf("\n");
@@ -326,7 +328,7 @@ void TSSAnalyzer::showHeapList(
 		return;
 
 	std::vector<const TSS_Heap*> ss;
-	sortSetByLimit(hl, ss, m_limitTop, m_sortType);
+	sortSetByLimit(hl, ss, m_limitTop, m_sortType, m_fDsc);
 
 	showSortInfo(ss.size());
 	myPrintf("\n");
@@ -343,7 +345,7 @@ void TSSAnalyzer::showHeapList(
 			myPrintf("Heap Space info:\n");
 
 			tst_ptdiffer current = h.StatBy<AllocBytesIdx>().current;
-			tst_ptdiffer committed = h.committed; // max(h.committed, h.ss_committed);
+			tst_ptdiffer committed = h.committed;
 			double percent = (double)current / (double)committed;
 			myPrintf("  [%.3f, %*llu, %*llu] [%u]",
 				percent,
@@ -372,7 +374,7 @@ void TSSAnalyzer::showThreadList(
 		return;
 
 	std::vector<const TSS_Thread*> ss;
-	sortSetByLimit(tl, ss, m_limitTop, m_sortType);
+	sortSetByLimit(tl, ss, m_limitTop, m_sortType, m_fDsc);
 
 	showSortInfo(ss.size());
 	myPrintf("\n");
@@ -401,7 +403,8 @@ void TSSAnalyzer::showThreadList(
 
 void TSSAnalyzer::parseSortArgs(
 	int argc, wchar_t** argv,
-	size_t &top, int &st, const char* scriptTmpl)
+	size_t &top, int &st, bool &fDsc,
+	const char* scriptTmpl)
 {
 	m_hasCondition = false;
 	if (argc >= 1)
@@ -420,38 +423,47 @@ void TSSAnalyzer::parseSortArgs(
 		}
 	}
 
-	if (argc >= 1)
+	while (argc >= 1)
 	{
 		int tmp = _wtoi(argv[0]);
 		if (tmp > 0)
+		{
 			top = tmp;
-	}
-	if (argc >= 2)
-	{
-		if (_wcsicmp(argv[1], L"CountTotal") == 0)
+		}
+		else if (_wcsicmp(argv[0], L"CountTotal") == 0)
 		{
 			st = ST_CountTotal;
 		}
-		else if(_wcsicmp(argv[1], L"CountCurrent") == 0)
+		else if(_wcsicmp(argv[0], L"CountCurrent") == 0)
 		{
 			st = ST_CountCurrent;
 		}
-		else if(_wcsicmp(argv[1], L"CountPeak") == 0)
+		else if(_wcsicmp(argv[0], L"CountPeak") == 0)
 		{
 			st = ST_CountPeak;
 		}
-		else if(_wcsicmp(argv[1], L"BytesTotal") == 0)
+		else if(_wcsicmp(argv[0], L"BytesTotal") == 0)
 		{
 			st = ST_BytesTotal;
 		}
-		else if(_wcsicmp(argv[1], L"BytesCurrent") == 0)
+		else if(_wcsicmp(argv[0], L"BytesCurrent") == 0)
 		{
 			st = ST_BytesCurrent;
 		}
-		else if(_wcsicmp(argv[1], L"BytesPeak") == 0)
+		else if(_wcsicmp(argv[0], L"BytesPeak") == 0)
 		{
 			st = ST_BytesPeak;
 		}
+		else if(_wcsicmp(argv[0], L"ASC") == 0)
+		{
+			fDsc = false;
+		}
+		else if(_wcsicmp(argv[0], L"DSC") == 0)
+		{
+			fDsc = true;
+		}
+		--argc;
+		++argv;
 	}
 }
 
@@ -474,7 +486,8 @@ void TSSAnalyzer::sortUseQueue(const S &s, SQ &sq)
 }
 
 template <class S, class CPS>
-void TSSAnalyzer::sortSetByLimit(const S &s, CPS &out, size_t top, int st)
+void TSSAnalyzer::sortSetByLimit(const S &s, CPS &out,
+	size_t top, int st, bool fDsc)
 {
 	top = min(top, s.size());
 
@@ -482,41 +495,77 @@ void TSSAnalyzer::sortSetByLimit(const S &s, CPS &out, size_t top, int st)
 	switch (st)
 	{
 	case ST_CountTotal:
-	{
-		FixedPriorityQueue<CP, CPS, CompT<ST_CountTotal> > topQueue(top, out);
-		sortUseQueue(s, topQueue);
+		if (fDsc)
+		{
+			FixedPriorityQueue<CP, CPS, CompBT<ST_CountTotal> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
+		else
+		{
+			FixedPriorityQueue<CP, CPS, CompLT<ST_CountTotal> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
 		break;
-	}
 	case ST_CountCurrent:
-	{
-		FixedPriorityQueue<CP, CPS, CompT<ST_CountCurrent> > topQueue(top, out);
-		sortUseQueue(s, topQueue);
+		if (fDsc)
+		{
+			FixedPriorityQueue<CP, CPS, CompBT<ST_CountCurrent> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
+		else
+		{
+			FixedPriorityQueue<CP, CPS, CompLT<ST_CountCurrent> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
 		break;
-	}
 	case ST_CountPeak:
-	{
-		FixedPriorityQueue<CP, CPS, CompT<ST_CountPeak> > topQueue(top, out);
-		sortUseQueue(s, topQueue);
+		if (fDsc)
+		{
+			FixedPriorityQueue<CP, CPS, CompBT<ST_CountPeak> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
+		else
+		{
+			FixedPriorityQueue<CP, CPS, CompLT<ST_CountPeak> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
 		break;
-	}
 	case ST_BytesTotal:
-	{
-		FixedPriorityQueue<CP, CPS, CompT<ST_BytesTotal> > topQueue(top, out);
-		sortUseQueue(s, topQueue);
+		if (fDsc)
+		{
+			FixedPriorityQueue<CP, CPS, CompBT<ST_BytesTotal> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
+		else
+		{
+			FixedPriorityQueue<CP, CPS, CompLT<ST_BytesTotal> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
 		break;
-	}
 	case ST_BytesCurrent:
-	{
-		FixedPriorityQueue<CP, CPS, CompT<ST_BytesCurrent> > topQueue(top, out);
-		sortUseQueue(s, topQueue);
+		if (fDsc)
+		{
+			FixedPriorityQueue<CP, CPS, CompBT<ST_BytesCurrent> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
+		else
+		{
+			FixedPriorityQueue<CP, CPS, CompLT<ST_BytesCurrent> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
 		break;
-	}
 	case ST_BytesPeak:
-	{
-		FixedPriorityQueue<CP, CPS, CompT<ST_BytesPeak> > topQueue(top, out);
-		sortUseQueue(s, topQueue);
+		if (fDsc)
+		{
+			FixedPriorityQueue<CP, CPS, CompBT<ST_BytesPeak> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
+		else
+		{
+			FixedPriorityQueue<CP, CPS, CompLT<ST_BytesPeak> > topQueue(top, out);
+			sortUseQueue(s, topQueue);
+		}
 		break;
-	}
 	default:
 		ASSERT (0);
 	}

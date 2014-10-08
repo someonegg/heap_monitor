@@ -54,10 +54,9 @@ protected:
 	};
 
 	template <int st>
-	struct CompT {};
-
+	struct CompBT {};
 	template <>
-	struct CompT<ST_CountTotal>
+	struct CompBT<ST_CountTotal>
 	{
 		template <class T>
 		bool operator() (const T* l, const T* r) const
@@ -68,7 +67,7 @@ protected:
 		}
 	};
 	template <>
-	struct CompT<ST_CountCurrent>
+	struct CompBT<ST_CountCurrent>
 	{
 		template <class T>
 		bool operator() (const T* l, const T* r) const
@@ -79,7 +78,7 @@ protected:
 		}
 	};
 	template <>
-	struct CompT<ST_CountPeak>
+	struct CompBT<ST_CountPeak>
 	{
 		template <class T>
 		bool operator() (const T* l, const T* r) const
@@ -90,7 +89,7 @@ protected:
 		}
 	};
 	template <>
-	struct CompT<ST_BytesTotal>
+	struct CompBT<ST_BytesTotal>
 	{
 		template <class T>
 		bool operator() (const T* l, const T* r) const
@@ -101,7 +100,7 @@ protected:
 		}
 	};
 	template <>
-	struct CompT<ST_BytesCurrent>
+	struct CompBT<ST_BytesCurrent>
 	{
 		template <class T>
 		bool operator() (const T* l, const T* r) const
@@ -112,7 +111,7 @@ protected:
 		}
 	};
 	template <>
-	struct CompT<ST_BytesPeak>
+	struct CompBT<ST_BytesPeak>
 	{
 		template <class T>
 		bool operator() (const T* l, const T* r) const
@@ -123,15 +122,86 @@ protected:
 		}
 	};
 
+	template <int st>
+	struct CompLT {};
+	template <>
+	struct CompLT<ST_CountTotal>
+	{
+		template <class T>
+		bool operator() (const T* l, const T* r) const
+		{
+			const AllocCount &acl = l->StatBy<AllocCountIdx>();
+			const AllocCount &acr = r->StatBy<AllocCountIdx>();
+			return acl.total < acr.total;
+		}
+	};
+	template <>
+	struct CompLT<ST_CountCurrent>
+	{
+		template <class T>
+		bool operator() (const T* l, const T* r) const
+		{
+			const AllocCount &acl = l->StatBy<AllocCountIdx>();
+			const AllocCount &acr = r->StatBy<AllocCountIdx>();
+			return acl.current < acr.current;
+		}
+	};
+	template <>
+	struct CompLT<ST_CountPeak>
+	{
+		template <class T>
+		bool operator() (const T* l, const T* r) const
+		{
+			const AllocCount &acl = l->StatBy<AllocCountIdx>();
+			const AllocCount &acr = r->StatBy<AllocCountIdx>();
+			return acl.peak < acr.peak;
+		}
+	};
+	template <>
+	struct CompLT<ST_BytesTotal>
+	{
+		template <class T>
+		bool operator() (const T* l, const T* r) const
+		{
+			const AllocCount &abl = l->StatBy<AllocBytesIdx>();
+			const AllocCount &abr = r->StatBy<AllocBytesIdx>();
+			return abl.total < abr.total;
+		}
+	};
+	template <>
+	struct CompLT<ST_BytesCurrent>
+	{
+		template <class T>
+		bool operator() (const T* l, const T* r) const
+		{
+			const AllocCount &abl = l->StatBy<AllocBytesIdx>();
+			const AllocCount &abr = r->StatBy<AllocBytesIdx>();
+			return abl.current < abr.current;
+		}
+	};
+	template <>
+	struct CompLT<ST_BytesPeak>
+	{
+		template <class T>
+		bool operator() (const T* l, const T* r) const
+		{
+			const AllocCount &abl = l->StatBy<AllocBytesIdx>();
+			const AllocCount &abr = r->StatBy<AllocBytesIdx>();
+			return abl.peak < abr.peak;
+		}
+	};
+
 	void parseSortArgs(
 		int argc, wchar_t** argv,
-		size_t &top, int &st, const char* scriptTmpl);
+		size_t &top, int &st, bool &fDsc,
+		const char* scriptTmpl);
 
 	template <class S, class SQ>
 	void sortUseQueue(const S &s, SQ &sq);
 
 	template <class S, class CPS>
-	void sortSetByLimit(const S &s, CPS &out, size_t top, int st);
+	void sortSetByLimit(const S &s, CPS &out,
+		size_t top, int st, bool fDsc);
 
 	template <size_t Base, class S>
 	void calcIDWidth(const S &s, size_t &wthID);
@@ -165,6 +235,7 @@ protected:
 
 	size_t m_limitTop;
 	int m_sortType;
+	bool m_fDsc;
 	bool m_hasCondition;
 
 	// format
