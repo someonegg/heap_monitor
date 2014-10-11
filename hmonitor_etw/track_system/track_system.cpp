@@ -44,6 +44,7 @@ public:
 		, tsDestroy()
 		, id()
 		, stackCreate()
+		, rns(0, -1)
 	{
 	}
 
@@ -57,17 +58,23 @@ public:
 		h.id = id;
 		h.stackCreate = stackCreate;
 
-		h.committed = 0;
-		const Ranges &ranges = rangem.ranges;
-		h.ranges.resize(ranges.size());
-		i = 0;
-		for (Ranges::const_iterator itor = ranges.begin();
-			itor != ranges.end(); ++itor, ++i)
+		class rnsdump
 		{
-			h.ranges[i].first = itor->first;
-			h.ranges[i].second = itor->second;
-			h.committed += itor->second - itor->first;
-		}
+			TSS_Heap &_h;
+			size_t _i;
+		public:
+			rnsdump(TSS_Heap &h) : _h(h), _i(0) {}
+			void push_back(tst_pointer b, tst_pointer e)
+			{
+				_h.ranges[_i].first = b;
+				_h.ranges[_i].second = e;
+				_h.committed += e - b;
+				++_i;
+			}
+		};
+		h.committed = 0;
+		h.ranges.resize(rns.size());
+		rns.dump(rnsdump(h));
 	}
 
 	tst_time tsCreate;
@@ -75,10 +82,7 @@ public:
 	tst_heapid id;
 	const IRA_SymS* stackCreate;
 
-	typedef jtwsm::RangeManager<tst_pointer> RangeM;
-	typedef RangeM::Range Range;
-	typedef RangeM::Ranges Ranges;
-	RangeM rangem;
+	jtwsm::ranges<tst_pointer> rns;
 };
 
 
@@ -343,12 +347,12 @@ public:
 				tst_pointer beg = addr - addr % HEAP_PAGESIZE;
 				tst_pointer lst = addr + size - 1;
 				tst_pointer end = lst - lst % HEAP_PAGESIZE + HEAP_PAGESIZE;
-				heap.rangem.add(beg, end);
+				heap.rns.add(beg, end);
 			}
 			else
 			{
 				// printf("u,%x,%x ", addr, size);
-				heap.rangem.del(addr, addr + size);
+				heap.rns.del(addr, addr + size);
 			}
 		}
 	}
@@ -577,7 +581,7 @@ public:
 		{
 			if (itor->second.heapid == heapid)
 			{
-				if (h->rangem.isin(itor->first))
+				if (h->rns.isin(itor->first))
 				{
 					count++;
 					bytes += itor->second.size;

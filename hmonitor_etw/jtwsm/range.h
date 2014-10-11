@@ -9,8 +9,7 @@
 #ifndef __RANGE_H__
 #define __RANGE_H__
 
-#include <utility>
-#include <list>
+#include <map>
 
 #ifndef ASSERT
 #define ASSERT(_E)		((void)0)
@@ -20,145 +19,133 @@ namespace jtwsm {
 
 
 // Range will be automatically merged
+// range : [beg, end)
 
 template <typename T>
-class RangeManager
+class ranges
 {
 public:
-	// [first,last)
-	typedef std::pair<T, T> Range;
-	typedef std::list<Range> Ranges;
-
-	Ranges ranges;
-
-	void add(T first, T last)
+	ranges(T min, T max)
+		: m_min(min)
+		, m_max(max)
 	{
-		ASSERT(first < last);
-
-		Range rn(first, last);
-		__add(rn);
+		ASSERT(m_min < m_max);
+		m_idxs[m_min].is_beg = false;
+		m_idxs[m_max].is_beg = true;
 	}
 
-	void del(T first, T last)
+	void add(T b, T e)
 	{
-		ASSERT(first < last);
+		__CHECK(b, e);
 
-		Range rn(first, last);
-		__del(rn);
-	}
+		m_idxs[b].is_beg = true;
+		m_idxs[e].is_beg = false;
 
-	bool isin(T t)
-	{
-		typename Ranges::const_iterator itor = ranges.begin();
-		for ( ; itor != ranges.end(); ++itor)
+		idxmap::iterator it, eb, ee;
+
+		it = m_idxs.find(b);
 		{
-			if (t >= itor->first && t < itor->second)
-			{
-				return true;
-			}
+			idxmap::iterator aft = it; ++aft;
+			idxmap::iterator bef = it; --bef;
+			if (bef->second.is_beg)
+				eb = it;
+			else
+				eb = aft;
 		}
-		return false;
+
+		it = m_idxs.find(e);
+		{
+			idxmap::iterator aft = it; ++aft;
+			if (aft->second.is_beg)
+				ee = it;
+			else
+				ee = aft;
+		}
+
+		// remove [eb, ee)
+		m_idxs.erase(eb, ee);
+	}
+
+	void del(T b, T e)
+	{
+		__CHECK(b, e);
+
+		m_idxs[b].is_beg = false;
+		m_idxs[e].is_beg = true;
+
+		idxmap::iterator it, eb, ee;
+
+		it = m_idxs.find(b);
+		{
+			idxmap::iterator aft = it; ++aft;
+			idxmap::iterator bef = it; --bef;
+			if (bef->second.is_beg)
+				eb = aft;
+			else
+				eb = it;
+		}
+
+		it = m_idxs.find(e);
+		{
+			idxmap::iterator aft = it; ++aft;
+			if (aft->second.is_beg)
+				ee = aft;
+			else
+				ee = it;
+		}
+
+		// remove [eb, ee)
+		m_idxs.erase(eb, ee);
+	}
+
+	bool isin(T t) const
+	{
+		idxmap::const_iterator it = m_idxs.lower_bound(t);
+		if (t == it->first)
+			return it->second.is_beg;
+		return !(it->second.is_beg);
+	}
+
+public:
+	size_t size() const
+	{
+		size_t s = m_idxs.size();
+		ASSERT(s > = 2 && s % 2 == 0);
+		return s / 2 - 1;
+	}
+
+	template <class _C>
+	void dump(_C &c) const
+	{
+		size_t s = m_idxs.size();
+		ASSERT(s > = 2 && s % 2 == 0);
+		idxmap::const_iterator it = m_idxs.begin(); ++it;
+		idxmap::const_iterator end = m_idxs.end(); --end;
+		for ( ; it != end; ++it)
+		{
+			idxmap::const_iterator aft = it; ++aft;
+			c.push_back(it->first, aft->first);
+			it = aft;
+		}
 	}
 
 private:
-	void __add(Range &rn)
+	void __CHECK(T b, T e)
 	{
-		typename Ranges::iterator itor = ranges.begin();
-		for ( ; itor != ranges.end(); )
-		{
-			if ( rn.second < itor->first )
-			{
-				ranges.insert(itor, rn);
-				return;
-			}
-
-			if ( rn.first < itor->first /* &&
-				rn.second >= itor->first */ )
-			{
-				if ( rn.second <= itor->second )
-				{
-					itor->first = rn.first;
-					return;
-				}
-
-				itor = ranges.erase(itor);
-				continue;
-			}
-
-			if ( /* rn.first >= itor->first && */
-				rn.first <= itor->second )
-			{
-				if ( rn.second <= itor->second )
-					return;
-
-				rn.first = itor->first;
-				itor = ranges.erase(itor);
-				continue;
-			}
-
-			++itor;
-		}
-
-		ASSERT(itor == ranges.end());
-		ranges.insert(itor, rn);
-		return;
+		ASSERT(b < e);
+		ASSERT(b > m_min);
+		ASSERT(e < m_max);
 	}
 
-	void __del(Range &rn)
-	{
-		typename Ranges::iterator itor = ranges.begin();
-		for ( ; itor != ranges.end(); )
-		{
-			if ( rn.second <= itor->first )
-			{
-				return;
-			}
-
-			if ( rn.first <= itor->first /* &&
-				rn.second > itor->first */ )
-			{
-				if ( rn.second < itor->second )
-				{
-					itor->first = rn.second;
-					return;
-				}
-				if (rn.second == itor->second)
-				{
-					ranges.erase(itor);
-					return;
-				}
-
-				rn.first = itor->second;
-				itor = ranges.erase(itor);
-				continue;
-			}
-
-			if ( /* rn.first > itor->first && */
-				rn.first < itor->second )
-			{
-				if ( rn.second < itor->second )
-				{
-					Range rnn(rn.second, itor->second);
-					itor->second = rn.first;
-					ranges.insert(++itor, rnn);
-					return;
-				}
-				if (rn.second == itor->second)
-				{
-					itor->second = rn.first;
-					return;
-				}
-
-				rn.first = itor->second;
-				++itor;
-				continue;
-			}
-
-			++itor;
-		}
-
-		return;
-	}
+private:
+	struct attr {
+		bool is_beg;
+	};
+	typedef std::map<T, attr> idxmap;
+	idxmap m_idxs;
+	// all T must in (min, max)
+	T m_min;
+	T m_max;
 };
 
 

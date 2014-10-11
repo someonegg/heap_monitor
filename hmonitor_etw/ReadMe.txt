@@ -43,6 +43,7 @@ l 系列命令
 TopLimit	显示Top N
 SortType	CountTotal CountCurrent CountPeak BytesTotal BytesCurrent BytesPeak
 Order		DSC or ASC
+TopLimit SortType Order 三项顺序无关
 
 Condition
 格式		"c:xxx"
